@@ -4,9 +4,9 @@
   </p>
 
 ## Table of Contents
-1. [Información general](#información-general)
-2. [Tecnologías](#tecnologías)
-3. [Instalación](#instalación)
+1. [General information](#General-information)
+2. [Technologies](#Technologies)
+3. [Installation](#Installation)
 ### General information
 ***
 NeighSecure is an intelligent residential access control system. Generate dynamic keys in seconds and share them with a simple QR scan. Residents can also manage visitor requests with ease. Download now for hassle-free residential security!
