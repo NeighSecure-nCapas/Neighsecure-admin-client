@@ -1,5 +1,5 @@
 import {Navigate, Outlet} from 'react-router-dom';
-import NavBar from "@/components/ui/NavBar.tsx";
+import Header from "@/components/ui/Header.tsx";
 
 export default function PrivateRoute() {
     /*const {user} = UseUserContext();
@@ -9,8 +9,8 @@ export default function PrivateRoute() {
     }*/
 
     return (
-        <div>
-            <NavBar/>
+        <div className={'xl:flex-row flex flex-col'}>
+            <Header/>
             <Outlet />
         </div>
     );

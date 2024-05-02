@@ -3,8 +3,10 @@ import NeighLogo from '../assets/NeighLogo.svg';
 import {Button} from "@/components/ui/button.tsx";
 
 import { FcGoogle } from "react-icons/fc";
+import {useNavigate} from "react-router-dom";
 
 export default function LoginView() {
+    const navigate = useNavigate();
     return (
         <>
             <section className={"flex flex-row  gap-16 h-dvh justify-center items-center"}>
@@ -20,7 +22,9 @@ export default function LoginView() {
                     <p className={'text-secondaryText text-xl font-light w-1/2'}>
                         {"Modulo de administración de NeighSecure, por favor inicia sesión."}
                     </p>
-                    <Button size={'lg'}>
+                    <Button
+                        onClick={() => navigate('/admin')}
+                        size={'lg'}>
                         <FcGoogle className={'h-[32px] w-[32px] mr-4'}/>
                         {"Continuar con Google"}
                     </Button>
