@@ -29,7 +29,7 @@ const dataNew = [
 
 export default function LinearOverview() {
     return (
-        <ResponsiveContainer width="100%" height={320}>
+        <ResponsiveContainer width="90%" height={300} className={"self-center"}>
             <LineChart data={dataNew}>
                 <Tooltip/>
                 <XAxis

@@ -7,3 +7,10 @@
     filter: invert(1);
   }
 }
+
+
+.icon.active{
+  img{
+    filter: invert(1);
+  }
+}

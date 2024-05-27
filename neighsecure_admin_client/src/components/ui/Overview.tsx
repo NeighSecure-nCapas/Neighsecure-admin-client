@@ -1,4 +1,4 @@
-import {Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis} from "recharts"
+import {Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts"
 
 const dataNew = [
     {
@@ -29,7 +29,7 @@ const dataNew = [
 
 export default function Overview() {
     return (
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="90%" height={250}  className={"self-center"}>
             <BarChart data={dataNew}>
                 <Tooltip/>
                 <XAxis
