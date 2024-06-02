@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { users } from "@/data/dummydata";
-import { toast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
 import { InfoMessage } from "./AddNewHome";
 import { Button } from "@/components/ui/button";
+import {toast} from "sonner";
 
 const duiRegex = new RegExp(/^\d{8}-\d$/);
 
@@ -38,32 +38,17 @@ const MemberInfo = ({ home, membersNumber, setNewHome }: MemberInfoProps) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof addMemberSchema>) {
+  const onSubmit = async (values: z.infer<typeof addMemberSchema>) => {
     let currentHome = home;
-
-    // If we are not editing a home, we create a new one.
-    if (!currentHome) {
-      currentHome = {
-        // id: "1", // let the id be null for now
-        // homeNumber: "1", // let the home number be null for now
-        // address: "Calle 1, Colonia 1", // let the address be null for now
-        admin: null,
-        users: [],
-        membersNumber: membersNumber,
-      };
-      setNewHome(currentHome);
-    }
 
     // * Check if the user is already in the home
     const userInHome =
-      currentHome.users?.find((user) => user.email === values.email) ||
-      currentHome.admin?.email === values.email;
+      currentHome!.users?.find((user) => user.email === values.email) ||
+      currentHome!.admin?.email === values.email;
 
     // * If the user is already in the home, return an error message
     if (userInHome) {
-      toast({
-        variant: "destructive",
-        title: "¡Ups! El usuario ya está en el hogar.",
+      toast.error("¡Ups! El usuario ya está en el hogar.",{
         description: "El usuario ya se encuentra en el hogar.",
         action: <ToastAction altText="Ok!">Entendido!</ToastAction>,
       });
@@ -76,12 +61,9 @@ const MemberInfo = ({ home, membersNumber, setNewHome }: MemberInfoProps) => {
 
     // * If the user does not exist, return an error message
     if (!userExists) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! El usuario no existe.",
+      toast.error( "Uh oh! El usuario no existe.",{
         description:
           "No hemos encontrado el usuario dentro de la base de datos.",
-        action: <ToastAction altText="Ok!">Entendido!</ToastAction>,
       });
       return;
     }
@@ -90,26 +72,25 @@ const MemberInfo = ({ home, membersNumber, setNewHome }: MemberInfoProps) => {
     if (values.isAdmin) {
       // * If the user is an admin, we set it as the admin of the home
       userExists?.roles.push("encargado");
-      currentHome.admin = userExists;
+      currentHome!.admin = userExists;
     } else {
       // TODO: If the user is not an admin, we add it to the users of the home and set user rol to "residente"
-      currentHome.users?.length! >= membersNumber
-        ? toast({
-            variant: "destructive",
-            title: "Uh oh! maximo de personas alcanzado.",
+      currentHome!.users?.length! >= membersNumber
+        ? toast.warning("Uh oh! maximo de personas alcanzado.",{
             description:
               "No puedes anadir mas del maximo de personas establecido.",
             action: <ToastAction altText="Ok!">Entendido!</ToastAction>,
           })
-        : currentHome.users?.push(userExists);
+        : currentHome!.users?.push(userExists);
     }
 
-    toast({
-      title: "Listo!.",
-      description: `Haz agregado a ${userExists.fullName} con exito.`,
-      action: <ToastAction altText="Ok!">Entendido!</ToastAction>,
+    setNewHome({ ...currentHome! });
+    toast.success("Listo!.",{
+      description: `Haz agregado a ${userExists.fullName} con exito.`
     });
-    setNewHome(currentHome);
+
+    // Limpia el formulario
+    form.reset();
   }
 
   return (

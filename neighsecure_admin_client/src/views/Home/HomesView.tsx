@@ -18,6 +18,7 @@ import {
 import { homes } from "@/data/dummydata";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import {toast} from "sonner";
 
 export default function HomesView() {
   const navigate = useNavigate();
@@ -27,6 +28,9 @@ export default function HomesView() {
   const handleRemoveHome = (home: Home) => {
     const updatedHomes = homesState.filter((h) => h.id !== home.id);
     setHomesState(updatedHomes); // Update state with the new homes array
+    toast.success("Listo!.", {
+      description: `Haz eleminado la casa <span class="font-bold"> # ${home.homeNumber}</span> con exito.`
+    });
   };
 
   const columns: ColumnDef<Home>[] = [
@@ -69,7 +73,7 @@ export default function HomesView() {
               <DropdownMenuLabel>Acciones</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate("/admin/hogares/1");
+                  navigate(`/admin/hogares/${cell.row.original.id}`);
                 }}
                 className="cursor-pointer"
               >

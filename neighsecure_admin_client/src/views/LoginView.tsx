@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button.tsx";
 
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
+import {TokenResponse, useGoogleLogin} from "@react-oauth/google";
+import axios from "axios";
 
 
 export default function LoginView() {
@@ -12,15 +14,55 @@ export default function LoginView() {
   const { login } = useAuthContext();
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    try {
-      // await login();
-      // Redirigir al usuario o actualizar el estado del componente aquí
-      navigate("/admin");
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-    }
-  };
+  const handleLogin = useGoogleLogin({
+    // onSuccess: async (response: TokenResponse) => {
+    //   console.log("User redirecting:", response);
+    //   // setUser(response);
+    //
+    //   const paylaod = await axios.get(
+    //       `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${response?.access_token}`,
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${response?.access_token}`,
+    //           Accept: "application/json",
+    //         },
+    //       }
+    //   );
+    //
+    //   console.log('Fetching user data...');
+    //   console.log(paylaod);
+    // },
+
+    onSuccess: async (codeResponse) => {
+      console.log('Getting access authorization code..', codeResponse);
+
+      const payload = await axios.get(
+          '/auth/google/redirect',
+          {
+            params: {
+                code: codeResponse.code
+            }
+          }
+      )
+
+      if (payload) {
+        console.log(payload);
+      }
+    },
+    flow: "auth-code",
+    scope: "profile email",
+    onError: (
+        errorResponse: Pick<
+            TokenResponse,
+            "error" | "error_description" | "error_uri"
+        >
+    ) =>
+        console.log(
+            "Login Failed:",
+            errorResponse.error,
+            errorResponse.error_description
+        ),
+  });
 
   return (
     <>
@@ -49,7 +91,7 @@ export default function LoginView() {
               "Modulo de administración de NeighSecure, por favor inicia sesión."
             }
           </p>
-          <Button onClick={handleLogin} size={"lg"}>
+          <Button onClick={() => handleLogin()} size={"lg"}>
             <FcGoogle className={"h-[32px] w-[32px] mr-4"} />
             {"Continuar con Google"}
           </Button>
