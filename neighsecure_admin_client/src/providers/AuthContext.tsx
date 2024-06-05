@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-// import { toast } from "react-toastify";
 // import { useConfigContext } from "./ConfigContext";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { TokenResponse, useGoogleLogin } from "@react-oauth/google";
 
 const TOKEN_KEY = "neigh_secure_token";
@@ -17,13 +16,8 @@ export interface User {
 export interface AuthContextProviderProps {
   token: string | null;
   user: User | TokenResponse | null;
-  login: () => Promise<void>;
+  login: () => void;
   logout: () => void;
-  register: (
-    username: string,
-    email: string,
-    password: string
-  ) => Promise<void>;
 }
 
 export const AuthContextProvider = (props: any) => {
@@ -57,73 +51,57 @@ export const AuthContextProvider = (props: any) => {
   //   }
   // };
 
-  const login = async () => {
-    try {
-      console.log("Login..");
 
-      useGoogleLogin({
-        onSuccess: (response: TokenResponse) => {
-          console.log("Login Success:", response);
-          // setUser(response);
-        },
-        onError: (
-          errorResponse: Pick<
+  const login = useGoogleLogin({
+    // onSuccess: async (response: TokenResponse) => {
+    //   console.log("User redirecting:", response);
+    //   // setUser(response);
+    //
+    //   const paylaod = await axios.get(
+    //       `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${response?.access_token}`,
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${response?.access_token}`,
+    //           Accept: "application/json",
+    //         },
+    //       }
+    //   );
+    //
+    //   console.log('Fetching user data...');
+    //   console.log(paylaod);
+    // },
+    onSuccess: async (codeResponse) => {
+      console.log('Getting access authorization code..', codeResponse);
+
+      const payload = await axios.get(
+          '/auth/google/redirect',
+          {
+            params: {
+              code: codeResponse.code
+            }
+          }
+      )
+
+      if (payload) {
+        const _token = payload.data.token;
+        setToken(_token);
+        setTokenLS(_token);
+      }
+    },
+    flow: "auth-code",
+    scope: "profile email",
+    onError: (
+        errorResponse: Pick<
             TokenResponse,
             "error" | "error_description" | "error_uri"
-          >
-        ) =>
-          console.log(
+        >
+    ) =>
+        console.log(
             "Login Failed:",
             errorResponse.error,
             errorResponse.error_description
-          ),
-      });
-      
-      // const response = await axios.get(
-      //   `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user?.access_token}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${user?.access_token}`,
-      //       Accept: "application/json",
-      //     },
-      //   }
-      // );
-      //
-      // setUser(response.data);
-
-      // How to involve Spring Boot backend:
-
-      // Authorization Code Flow:  Instead of directly fetching user info from Google's API, use the Authorization Code Flow. This flow involves:
-
-      // User clicking the Google login button.
-      // Redirecting the user to Google's login page.
-      // After successful login, Google redirects back to your application with an authorization code.
-      // Your React application sends this code to your Spring Boot backend for token exchange.
-      // Spring Security Configuration: Configure Spring Security in your Spring Boot application to handle OAuth:
-
-      // Add spring-boot-starter-security and spring-boot-starter-oauth2-client dependencies.
-      // Configure a bean for OAuth2ClientProperties with your Google Client ID and Secret obtained from the Google Cloud Console.
-      // Token Endpoint: Create a Spring Boot endpoint to receive the authorization code and exchange it for access and refresh tokens using the Google OAuth library.
-
-      // User Information: In the same endpoint, after successful token exchange, fetch user information from Google's API using the access token.
-
-      // Token Validation: Spring Security can be configured to validate JWT tokens issued by your backend on subsequent requests.
-
-      // const _token = response.data.token;
-      // setToken(_token);
-      // setTokenLS(_token);
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      const { status } = axiosError.response || { status: 500 };
-      const msgs = {
-        "404": "User not found",
-        "401": "Unauthorized",
-        "500": "Unexpected error",
-      };
-
-      logout();
-    }
-  };
+        ),
+  });
 
   const logout = () => {
     removeTokenLS();
@@ -132,30 +110,11 @@ export const AuthContextProvider = (props: any) => {
     window.location.href = "https://localhost:5173/";
   };
 
-  const register = async (
-    username: string,
-    email: string,
-    password: string
-  ) => {
-    try {
-      await axios.post("/auth/signup", { username, email, password });
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      const { status } = axiosError.response || { status: 500 };
-      const msgs = {
-        "400": "Wrong Fields",
-        "409": "User already exists",
-        "500": "Unexpected error",
-      };
-    }
-  };
-
   const state: AuthContextProviderProps = {
     token,
     user,
     login,
     logout,
-    register,
   };
 
   return <AuthContext.Provider value={state} {...props} />;

@@ -21,7 +21,7 @@ const routes = [
   { name: "Residentes", route: "/admin/residentes", icon: residentesIcon },
   { name: "Visitantes", route: "/admin/visitantes", icon: visitantesIcon },
   { name: "Entradas", route: "/admin/entradas", icon: entradasIcon },
-  { name: "Vigilantes", route: "#", icon: vigilantesIcon },
+  { name: "Vigilantes", route: "/admin/vigilantes", icon: vigilantesIcon },
 ];
 
 export default function Header() {

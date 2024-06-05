@@ -5,6 +5,7 @@ type User = {
   roles: string[]
   homeId?: string
   dui: string
+  assignedTerminal?: string | null
 }
 
 type Home = {

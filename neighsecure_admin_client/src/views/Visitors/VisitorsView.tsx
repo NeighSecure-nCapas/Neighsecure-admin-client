@@ -6,11 +6,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { MdDeleteSweep, MdKeyboardArrowDown, MdMoreHoriz } from "react-icons/md";
+import { MdKeyboardArrowDown, MdMoreHoriz } from "react-icons/md";
 
 export const columns: ColumnDef<Visitor>[] = [
   {
@@ -83,10 +82,10 @@ export const columns: ColumnDef<Visitor>[] = [
             >
               {"Ver mas informacion"}
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="bg-red-500 cursor-pointer text-white">
-              <MdDeleteSweep className="w-5 h-5 mr-2" /> {"Eliminar"}
-            </DropdownMenuItem>
+            {/*<DropdownMenuSeparator />*/}
+            {/*<DropdownMenuItem className="bg-red-500 cursor-pointer text-white">*/}
+            {/*  <MdDeleteSweep className="w-5 h-5 mr-2" /> {"Eliminar"}*/}
+            {/*</DropdownMenuItem>*/}
           </DropdownMenuContent>
         </DropdownMenu>
       );

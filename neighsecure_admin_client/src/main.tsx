@@ -10,7 +10,7 @@ import axios from "axios";
 axios.defaults.baseURL = import.meta.env.VITE_APIENDPOINT || "http://localhost:8080/neighSecure";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <GoogleOAuthProvider clientId={import.meta.env.GOOGLE_AUTH_CLIENT_ID}>
+  <GoogleOAuthProvider clientId={"266523106449-pojfcjr5r4gtmlontuhfuc3ram9a54l7.apps.googleusercontent.com"}>
     <AuthContextProvider>
       <React.StrictMode>
         <App />

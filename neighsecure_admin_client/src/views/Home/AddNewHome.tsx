@@ -7,7 +7,6 @@ import {LiaIdCard} from "react-icons/lia";
 import PopoverDemo from "./Popover";
 import MemberInfo from "./MemberInfo";
 import {toast} from "sonner"
-import {ToastAction} from "@/components/ui/toast";
 import {homes} from "@/data/dummydata";
 import {useParams} from "react-router-dom";
 
@@ -215,15 +214,15 @@ const AddNewHome = () => {
     );
 };
 
-const UserCard = (
+export const UserCard = (
     user: User,
-    index: number,
-    home: Home,
-    setHome: (home: Home) => void
+    index?: number,
+    home?: Home,
+    setHome?: (home: Home) => void
 ): JSX.Element => {
     const handleRemoveUser = () => {
-        const updatedUsers = home.users?.filter((u, i) => i !== index);
-        setHome({...home, users: updatedUsers});
+        const updatedUsers = home!.users?.filter((u, i) => i !== index);
+        setHome!({...home, users: updatedUsers});
     };
 
     return (
