@@ -31,10 +31,6 @@ export const columns: ColumnDef<Visitor>[] = [
     },
   },
   {
-    accessorKey: "visitType",
-    header: "Tipo de visita",
-  },
-  {
     accessorKey: "visitorName",
     header: ({ column }) => {
       return (

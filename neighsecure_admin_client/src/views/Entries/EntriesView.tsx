@@ -13,8 +13,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MdDeleteSweep, MdKeyboardArrowDown, MdMoreHoriz } from "react-icons/md";
 import {useState} from "react";
 import {toast} from "sonner";
+import {useNavigate} from "react-router-dom";
 
 const VisitorViews = () => {
+
+  const navigate = useNavigate();
 
   const [entriesState, setEntriesState] = useState(entries); // Initialize state with imported homes
 
@@ -93,7 +96,7 @@ const VisitorViews = () => {
                 <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                 <DropdownMenuItem
                     className="cursor-pointer"
-                    //onClick={() => homes.find((home) => home.id === row.original.id)}
+                    onClick={() => navigate(`/admin/entradas/${cell.row.original.id}`)}
                 >
                   {"Ver mas informacion"}
                 </DropdownMenuItem>

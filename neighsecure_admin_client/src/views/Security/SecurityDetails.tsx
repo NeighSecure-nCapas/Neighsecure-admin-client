@@ -48,7 +48,7 @@ const SecurityDetails = () => {
                     <span>Regresar</span>
                 </Button>
                 <hr className="w-full h-2 opacity-85"/>
-                <div className="flex flex-col justify-center min-h-[60dvh] items-start w-full">
+                <div className="flex flex-col justify-center min-h-[60dvh] items-center w-full">
                     {securityPerson ? (
                         <>
                             <SecurityForm
@@ -60,7 +60,6 @@ const SecurityDetails = () => {
                         <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
                         </svg>
                     )}
-
                 </div>
             </section>
         </>

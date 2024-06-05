@@ -20,7 +20,6 @@ type Home = {
 type Visitor = {
   id: string
   date: string
-  visitType: string
   visitorName: string
   homeNumber: string
 }
