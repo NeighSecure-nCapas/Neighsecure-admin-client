@@ -2,20 +2,18 @@ import {Button} from "@/components/ui/button.tsx";
 import {MdArrowBack} from "react-icons/md";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {entries} from "@/data/dummydata.ts";
-import {InfoMessage} from "@/views/Home/AddNewHome.tsx";
-import {Textarea} from "@/components/ui/textarea.tsx";
+import {visitors} from "@/data/dummydata.ts";
 
-const EntriesDetail = () => {
+const VisitorsDetails = () => {
 
     let {id} = useParams();
 
-    const [entry, setEntry] = useState<Entries | null>(null);
+    const [visit, setVisit] = useState<Visitor | null>(null);
 
     useEffect(() => {
         if (id) {
-            const foundEntry = entries.find((entry) => entry.id === id);
-            setEntry(foundEntry!);
+            const foundVisitor = visitors.find((entry) => entry.id === id);
+            setVisit(foundVisitor!);
         } else {
             window.history.back()
         }
@@ -39,42 +37,32 @@ const EntriesDetail = () => {
                 <span>Regresar</span>
             </Button>
             <hr className="w-full h-2 opacity-85"/>
-            <div className="flex flex-row justify-around min-h-[60dvh] items-center w-full">
+            <div className="flex flex-row justify-around gap-8 min-h-[60dvh] items-center w-full">
                 <div className={'flex flex-col gap-8'}>
                     <span className={'font-medium'}>
                         Nombre
                     </span>
                     <span>
-                        {entry?.name}
+                            {visit?.visitorName}
                     </span>
                     <span className={'font-medium'}>
-                        Fecha
+                            Fecha
                     </span>
                     <span>
-                        {entry?.date}
+                            {visit?.date}
                     </span>
                     <span className={'font-medium'}>
-                        Tipo de entrada
+                            Casa a visitar
                     </span>
                     <span>
-                        {entry?.entryType}
-                    </span>
-                    <span className={'font-medium'}>
-                        Casa destino
-                    </span>
-                    <span>
-                        {entry?.name}
+                            {visit?.homeNumber}
                     </span>
                 </div>
-                <div className={'flex flex-col justify-center gap-8'}>
-                    <h2 className={'font-medium'}>
-                        Comentario
-                    </h2>
-                    <InfoMessage message={"En caso de ser una visita anónima el vigilante pudo haber agregado un comentario sobre la entrada."}/>
-                    <Textarea
-                        disabled
-                        className={"h-40dvh"}
-                        placeholder={entry?.comment!}
+                <div className={'flex flex-col w-1/3 justify-center gap-8'}>
+                    <img
+                        className={'h-auto rounded-2xl'}
+                        src={'/cuate.svg'}
+                        alt={'visitor'}
                     />
                 </div>
             </div>
@@ -82,4 +70,4 @@ const EntriesDetail = () => {
     )
 }
 
-export default EntriesDetail;
+export default VisitorsDetails;

@@ -13,6 +13,7 @@ import AddNewHome from './views/Home/AddNewHome';
 import SecurityView from "@/views/Security/SecurityView.tsx";
 import SecurityDetails from "@/views/Security/SecurityDetails.tsx";
 import EntriesDetail from "@/views/Entries/EntriesDetail.tsx";
+import VisitorsDetails from "@/views/Visitors/VisitorDetails.tsx";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "visitantes",
         element: <VisitorViews />,
+      },
+      {
+        path: "visitantes/:id",
+        element: <VisitorsDetails />,
       },
       {
         path: "entradas",

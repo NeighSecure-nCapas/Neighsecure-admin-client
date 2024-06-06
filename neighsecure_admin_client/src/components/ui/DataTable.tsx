@@ -28,8 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./button";
 import { Input } from "./input";
-import { MdAdd, MdKeyboardArrowDown, MdSearch } from "react-icons/md";
-
+import {MdAdd, MdErrorOutline, MdKeyboardArrowDown, MdSearch} from "react-icons/md";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -148,7 +147,7 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row ) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
@@ -169,7 +168,10 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  <div className={'flex flex-col items-center justify-center gap-4'}>
+                    <MdErrorOutline className={'h-7 w-7 font-light'}/>
+                    {'No hay resultados disponibles'}
+                  </div>
                 </TableCell>
               </TableRow>
             )}
