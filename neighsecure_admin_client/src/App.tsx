@@ -9,7 +9,7 @@ import HomesView from './views/Home/HomesView';
 import ResidentsView from './views/Residentes/ResidentsView';
 import VisitorViews from './views/Visitors/VisitorsView';
 import EntriesView from './views/Entries/EntriesView';
-import AddNewHome from './views/Home/AddNewHome';
+import HomesAddNew from './views/Home/HomesAddNew.tsx';
 import SecurityView from "@/views/Security/SecurityView.tsx";
 import SecurityDetails from "@/views/Security/SecurityDetails.tsx";
 import EntriesDetail from "@/views/Entries/EntriesDetail.tsx";
@@ -30,11 +30,11 @@ const router = createBrowserRouter([
       },
       {
         path: "hogares/agregar",
-        element: <AddNewHome />,
+        element: <HomesAddNew />,
       },
       {
         path: "hogares/:id",
-        element: <AddNewHome />,
+        element: <HomesAddNew />,
       },
       {
         path: "residentes",

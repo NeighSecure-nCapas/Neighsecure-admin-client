@@ -74,7 +74,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-4 w-full bg-gray-50 p-4 rounded-xl">
       <div className="flex items-center py-4">
         <MdSearch className="h-5 w-5 mr-3 text-muted-foreground" />
         <Input

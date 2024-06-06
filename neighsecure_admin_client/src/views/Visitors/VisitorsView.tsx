@@ -11,6 +11,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { MdKeyboardArrowDown, MdMoreHoriz } from "react-icons/md";
 import {useNavigate} from "react-router-dom";
+import AnimationWrap from "@/components/ui/AnimationWraper.tsx";
 
 const VisitorViews = () => {
 
@@ -91,7 +92,10 @@ const VisitorViews = () => {
   ];
 
     return (
-      <div className="container lg:w-[80%] flex flex-col justify-center items-center gap-12">
+      <AnimationWrap
+          className="container lg:w-[80%] flex flex-col justify-center items-center gap-12"
+          position={-50}
+      >
         <h1 className="self-start text-3xl ">{"Lista de Visitantes"}</h1>
         <DataTable
           columns={columns}
@@ -99,7 +103,7 @@ const VisitorViews = () => {
           shearchValue="visitorName"
           searhValuePlaceholder="Buscar por nombre..."
         />
-      </div>
+      </AnimationWrap>
     );
 };
 

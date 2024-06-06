@@ -4,13 +4,13 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {MdArrowBack, MdClose, MdInfoOutline} from "react-icons/md";
 import {LiaIdCard} from "react-icons/lia";
-import PopoverDemo from "./Popover";
-import MemberInfo from "./MemberInfo";
+import PopoverDemo from "./HomesPopover.tsx";
+import HomesMemberInfo from "./HomesMemberInfo.tsx";
 import {toast} from "sonner"
 import {homes} from "@/data/dummydata";
 import {useParams} from "react-router-dom";
 
-const AddNewHome = () => {
+const HomesAddNew = () => {
     let {id} = useParams();
 
     const [home, setNewHome] = useState<Home | null>(null);
@@ -195,7 +195,7 @@ const AddNewHome = () => {
                         </>
                     </div>
 
-                    <MemberInfo
+                    <HomesMemberInfo
                         home={home}
                         setNewHome={setNewHome}
                         membersNumber={membersNumber}
@@ -254,4 +254,4 @@ export const InfoMessage = ({message}: { message: string }) => {
     );
 };
 
-export default AddNewHome;
+export default HomesAddNew;

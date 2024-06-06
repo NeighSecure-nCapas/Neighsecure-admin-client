@@ -3,7 +3,7 @@ import {MdArrowBack} from "react-icons/md";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {entries} from "@/data/dummydata.ts";
-import {InfoMessage} from "@/views/Home/AddNewHome.tsx";
+import {InfoMessage} from "@/views/Home/HomesAddNew.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
 
 const EntriesDetail = () => {

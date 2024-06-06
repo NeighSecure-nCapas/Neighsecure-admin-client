@@ -18,6 +18,7 @@ import {
 import { homes, users } from "@/data/dummydata";
 import {useState} from "react";
 import {toast} from "sonner";
+import AnimationWrap from "@/components/ui/AnimationWraper.tsx";
 
 
 export default function ResidentsView() {
@@ -97,7 +98,10 @@ export default function ResidentsView() {
   const residentUsers = usersState.filter(user => user.roles.includes('residente'));
 
   return (
-    <div className="container lg:w-[80%] flex flex-col justify-center items-center gap-12">
+    <AnimationWrap
+        className="container lg:w-[80%] flex flex-col justify-center items-center gap-12"
+        position={-50}
+    >
       <h1 className="self-start text-3xl ">
         {"Lista de residentes registrados"}
       </h1>
@@ -107,6 +111,6 @@ export default function ResidentsView() {
         shearchValue="fullName"
         searhValuePlaceholder="Buscar por nombre..."
       />
-    </div>
+    </AnimationWrap>
   );
 }

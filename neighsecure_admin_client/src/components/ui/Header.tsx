@@ -2,27 +2,12 @@ import {useState} from 'react';
 
 import {MdClose, MdLogout, MdMenu} from "react-icons/md";
 
-import visitantesIcon from "@/assets/visitantesIcon.svg";
-import hogaresIcon from "@/assets/hogaresIcon.svg";
-import dashboardIcon from "@/assets/dashboardIcon.svg";
-import vigilantesIcon from "@/assets/vigilantesIcon.svg";
-import entradasIcon from "@/assets/entradasIcon.svg";
-import residentesIcon from "@/assets/residentesIcon.svg";
-
 import {motion} from 'framer-motion';
 import NeighLogo from "@/assets/NeighLogo.svg";
 
 import {Button} from "@/components/ui/button.tsx";
 import {Link, useNavigate, useLocation} from "react-router-dom";
-
-const routes = [
-  { name: "Dashboard", route: "/admin", icon: dashboardIcon },
-  { name: "Hogares", route: "/admin/hogares", icon: hogaresIcon },
-  { name: "Residentes", route: "/admin/residentes", icon: residentesIcon },
-  { name: "Visitantes", route: "/admin/visitantes", icon: visitantesIcon },
-  { name: "Entradas", route: "/admin/entradas", icon: entradasIcon },
-  { name: "Vigilantes", route: "/admin/vigilantes", icon: vigilantesIcon },
-];
+import {routes} from "@/data/dummydata.ts";
 
 export default function Header() {
 
@@ -33,9 +18,7 @@ export default function Header() {
       <header>
         <nav className="sticky top-0 bg-white xl:bg-primaryColor left-0 z-50 flex w-screen flex-row items-center justify-between gap-10 self-start px-12 py-4 xl:px-4 lg:w-64 xl:h-screen xl:flex-col xl:py-8">
           <div
-            className={
-              "hidden xl:flex xl:flex-col w-full h-full justify-around"
-            }
+              className={"hidden xl:flex xl:flex-col w-full h-full justify-around"}
           >
             <div
               className={
@@ -63,7 +46,7 @@ export default function Header() {
               </div>
             </div>
 
-            <HeaderItem text={"Cerrar sesión"} route={"/"} isSelected={true} />
+              <HeaderItem text={"Cerrar sesión"} route={"/"} isSelected={true} />
           </div>
 
           <motion.div

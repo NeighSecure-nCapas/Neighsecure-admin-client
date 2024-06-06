@@ -14,6 +14,7 @@ import { MdDeleteSweep, MdKeyboardArrowDown, MdMoreHoriz } from "react-icons/md"
 import {useState} from "react";
 import {toast} from "sonner";
 import {useNavigate} from "react-router-dom";
+import AnimationWrap from "@/components/ui/AnimationWraper.tsx";
 
 const VisitorViews = () => {
 
@@ -114,7 +115,10 @@ const VisitorViews = () => {
   ];
 
   return (
-    <div className="container lg:w-[80%] flex flex-col justify-center items-center gap-12">
+    <AnimationWrap
+        className="container lg:w-[80%] flex flex-col justify-center items-center gap-12"
+        position={-50}
+    >
       <h1 className="self-start text-3xl ">{"Lista de Entradas"}</h1>
       <DataTable
         columns={columns}
@@ -122,7 +126,7 @@ const VisitorViews = () => {
         shearchValue="name"
         searhValuePlaceholder="Buscar por nombre..."
       />
-    </div>
+    </AnimationWrap>
   );
 };
 

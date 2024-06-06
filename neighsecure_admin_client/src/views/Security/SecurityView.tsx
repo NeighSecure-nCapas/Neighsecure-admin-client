@@ -18,6 +18,7 @@ import {users} from "@/data/dummydata";
 import {useNavigate} from "react-router-dom";
 import {toast} from "sonner";
 import {useState} from "react";
+import AnimationWrap from "@/components/ui/AnimationWraper.tsx";
 
 const SecurityView = () => {
 
@@ -95,7 +96,10 @@ const SecurityView = () => {
     const securityUsers = usersState.filter(user => user.roles.includes('vigilante'));
 
     return (
-        <div className="container lg:w-[80%] flex flex-col justify-center items-center gap-12">
+        <AnimationWrap
+            className="container lg:w-[80%] flex flex-col justify-center items-center gap-12"
+            position={-50}
+        >
             <h1 className="self-start text-3xl ">
                 {"Lista de Vigilantes"}
             </h1>
@@ -111,7 +115,7 @@ const SecurityView = () => {
                     }
                 }
             />
-        </div>
+        </AnimationWrap>
     );
 }
 

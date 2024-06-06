@@ -6,7 +6,7 @@ import {ToastAction} from "@/components/ui/toast";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
-import {InfoMessage} from "@/views/Home/AddNewHome.tsx";
+import {InfoMessage} from "@/views/Home/HomesAddNew.tsx";
 
 type SecurityFormProps = {
     user: User;
