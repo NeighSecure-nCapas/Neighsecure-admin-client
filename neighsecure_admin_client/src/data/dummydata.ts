@@ -47,7 +47,8 @@ export const homes: Home[] = [
       dui: "00000000-0",
     },
     users: [],
-  }
+  },
+
 ];
 
 export const users: User[] = [

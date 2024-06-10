@@ -28,7 +28,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./button";
 import { Input } from "./input";
-import {MdAdd, MdErrorOutline, MdKeyboardArrowDown, MdSearch} from "react-icons/md";
+import {MdAdd, MdErrorOutline, MdSearch} from "react-icons/md";
+import { VscSettings } from "react-icons/vsc";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -74,7 +75,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4 w-full bg-gray-50 p-4 rounded-xl">
+    <div className="space-y-4 w-full bg-gray-50 p-4 min-h-[50dvh] rounded-xl">
       <div className="flex items-center py-4">
         <MdSearch className="h-5 w-5 mr-3 text-muted-foreground" />
         <Input
@@ -90,8 +91,8 @@ export function DataTable<TData, TValue>({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="ml-auto">
+              <VscSettings className="ml-2 h-4 w-4" />
               Columnas
-              <MdKeyboardArrowDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
