@@ -91,7 +91,7 @@ export function DataTable<TData, TValue>({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="ml-auto">
-              <VscSettings className="ml-2 h-4 w-4" />
+              <VscSettings className="mr-3 h-4 w-4" />
               Columnas
             </Button>
           </DropdownMenuTrigger>
@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
         </DropdownMenu>
         {
           addValue && (
-            <Button className="ml-4" size={"icon"} onClick={onAddValue}>
+            <Button className="ml-4 py-6" size={"icon"} onClick={onAddValue}>
               <MdAdd className="h-5 w-5" />
             </Button>
           )

@@ -1,10 +1,9 @@
-import {DataTable} from "@/components/ui/DataTable";
-import {ColumnDef} from "@tanstack/react-table";
+import { DataTable } from "@/components/ui/DataTable";
+import { ColumnDef } from "@tanstack/react-table";
 import {
     MdMoreHoriz,
     MdDeleteSweep, MdKeyboardArrowDown,
 } from "react-icons/md";
-
 import {Button} from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -14,25 +13,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {users} from "@/data/dummydata";
-import {useNavigate} from "react-router-dom";
-import {toast} from "sonner";
-import {useState} from "react";
+import { useNavigate } from "react-router-dom";
 import AnimationWrap from "@/components/ui/AnimationWraper.tsx";
+import useSWR from "swr";
+import {deleteUser, GET} from "@/hooks/Dashboard.tsx";
+import LoadingSpinner from "@/components/LoadingSpinner.tsx";
 
 const SecurityView = () => {
 
     const navigate = useNavigate();
-
-    const [usersState, setUsersState] = useState(users); // Initialize state with imported homes
-
-    const handleRemoveHome = (user: User) => {
-        const updatedUsers = usersState.filter((u) => u.id !== user.id);
-        setUsersState(updatedUsers); // Update state with the new homes array
-        toast.success("Listo!.", {
-            description: `Haz eleminado al usuario <span class="font-semibold"> ${user.fullName}</span> con exito.`
-        });
-    };
+    const  { data, isLoading } = useSWR('/admin/users/role/Vigilante', GET);
 
     const columns: ColumnDef<User>[] = [
         {
@@ -40,8 +30,16 @@ const SecurityView = () => {
             header: "ID",
         },
         {
-            accessorKey: "fullName",
+            accessorKey: "name",
             header: "Nombre",
+        },
+        {
+            accessorKey: "email",
+            header: "Correo electronico",
+        },
+        {
+            accessorKey: "phone",
+            header: "Numero de telefono",
         },
         {
             accessorKey: "dui",
@@ -74,14 +72,16 @@ const SecurityView = () => {
                             <DropdownMenuItem
                                 className="cursor-pointer"
                                 onClick={() => {
-                                    navigate(`/admin/vigilantes/${cell.row.original.id}`);
+                                    navigate(`/admin/visitantes/${cell.row.original.id}`);
                                 }}
                             >
                                 {"Ver mas informacion"}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator/>
                             <DropdownMenuItem
-                                onClick={() => handleRemoveHome(cell.row.original)}
+                                onClick={() => deleteUser(
+                                    `/admin/users/delete/${cell.row.original.id}`
+                                )}
                                 className="bg-red-500 cursor-pointer text-white">
                                 <MdDeleteSweep className="w-5 h-5 mr-2"/> {"Eliminar"}
                             </DropdownMenuItem>
@@ -92,9 +92,6 @@ const SecurityView = () => {
         },
     ];
 
-    // Filtrar los usuarios que tienen el rol de "vigilante"
-    const securityUsers = usersState.filter(user => user.roles.includes('vigilante'));
-
     return (
         <AnimationWrap
             className="container lg:w-[80%] flex flex-col justify-center items-center gap-12"
@@ -103,18 +100,19 @@ const SecurityView = () => {
             <h1 className="self-start text-3xl ">
                 {"Lista de Vigilantes"}
             </h1>
+            {isLoading && (<LoadingSpinner />)}
+            {data && (
             <DataTable
                 columns={columns}
-                data={securityUsers}
-                shearchValue="fullName"
+                data={data}
+                shearchValue="name"
                 searhValuePlaceholder="Buscar por nombre..."
                 addValue
-                onAddValue={
-                    () => {
+                onAddValue={() => {
                         navigate("/admin/vigilantes/agregar");
-                    }
-                }
+                }}
             />
+            )}
         </AnimationWrap>
     );
 }

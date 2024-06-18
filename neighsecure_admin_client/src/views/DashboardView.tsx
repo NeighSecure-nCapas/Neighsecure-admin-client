@@ -3,34 +3,50 @@ import {MdCardMembership, MdHome, MdPeople} from "react-icons/md";
 import React from "react";
 import Overview from "@/components/ui/Overview.tsx";
 import LinearOverview from "@/components/ui/LinearOverview.tsx";
+import useSWR from "swr";
+import { GET } from "@/hooks/Dashboard.tsx";
 
 export default function DashboardView() {
+
+    const  { data, isLoading } = useSWR('/admin/entries', GET);
     
     return (
       <section className={"container flex flex-col gap-12 h-dvh justify-center items-center"}>
         <div
           className={"w-full flex flex-row gap-10 items-center justify-center"}
         >
-          <DashboardCardItem
-            title={"# de visitantes de hoy"}
-            stats={23}
-            subtitle={"+5.1 % que el mes pasado"}
-            Icon={<MdPeople size={16} className={"text-primaryColor"} />}
-          />
-          <DashboardCardItem
-            title={"Total de hogares registrados"}
-            stats={2500}
-            subtitle={"+10.1 % que el mes pasado"}
-            Icon={<MdHome size={16} className={"text-primaryColor"} />}
-          />
-          <DashboardCardItem
-            title={"Total residentes registrados"}
-            stats={1156}
-            subtitle={"+20.1 % que el mes pasado"}
-            Icon={
-              <MdCardMembership size={16} className={"text-primaryColor"} />
+            {isLoading && (
+                <>
+                    <DashboardCardItemSkeleton />
+                    <DashboardCardItemSkeleton />
+                    <DashboardCardItemSkeleton />
+                </>
+                )
             }
-          />
+            {
+                data && (
+                    <>
+                        <DashboardCardItem
+                            title={"# de visitantes de hoy"}
+                            stats={23}
+                            subtitle={"+5.1 % que el mes pasado"}
+                            Icon={<MdPeople size={16} className={"text-primaryColor"} />}
+                        />
+                        <DashboardCardItem
+                            title={"Total de hogares registrados"}
+                            stats={2500}
+                            subtitle={"+10.1 % que el mes pasado"}
+                            Icon={<MdHome size={16} className={"text-primaryColor"} />}
+                        />
+                        <DashboardCardItem
+                            title={"Total residentes registrados"}
+                            stats={1156}
+                            subtitle={"+20.1 % que el mes pasado"}
+                            Icon={<MdCardMembership size={16} className={"text-primaryColor"} />}
+                        />
+                    </>
+                )
+            }
         </div>
         <div className={"w-full flex-col flex gap-6 px-8"}>
           <h1 className={"text-1xl font-medium self-start"}>
@@ -67,5 +83,18 @@ function DashboardCardItem({title, stats, subtitle, Icon}: DashboardCardItem) {
                 <p className="text-xs pt-2 text-muted-foreground">{subtitle}</p>
             </CardContent>
         </Card>
+    )
+}
+
+function DashboardCardItemSkeleton() {
+    return (
+        <div className="w-96 p-4 border border-gray-300 rounded shadow">
+            <div className="flex justify-between items-center">
+                <div className="w-3/4 h-4 bg-gray-300 rounded"></div>
+                <div className="w-6 h-6 bg-gray-300 rounded"></div>
+            </div>
+            <div className="mt-4 h-8 bg-gray-300 rounded"></div>
+            <div className="mt-2 h-4 bg-gray-300 rounded w-3/4"></div>
+        </div>
     )
 }

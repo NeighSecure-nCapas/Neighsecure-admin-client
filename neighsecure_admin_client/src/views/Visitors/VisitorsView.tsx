@@ -1,6 +1,5 @@
 import { DataTable } from "@/components/ui/DataTable";
 import { Button } from "@/components/ui/button";
-import { visitors } from "@/data/dummydata";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,18 +11,22 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MdKeyboardArrowDown, MdMoreHoriz } from "react-icons/md";
 import {useNavigate} from "react-router-dom";
 import AnimationWrap from "@/components/ui/AnimationWraper.tsx";
+import useSWR from "swr";
+import {GET} from "@/hooks/Dashboard.tsx";
+import LoadingSpinner from "@/components/LoadingSpinner.tsx";
 
 const VisitorViews = () => {
 
   const navigate = useNavigate();
+  const  { data, isLoading } = useSWR('/admin/users/role/Visitante', GET);
 
-  const columns: ColumnDef<Visitor>[] = [
+  const columns: ColumnDef<User>[] = [
     {
       accessorKey: "id",
       header: "ID",
     },
     {
-      accessorKey: "date",
+      accessorKey: "email",
       header: ({ column }) => {
         return (
             <Button
@@ -37,7 +40,7 @@ const VisitorViews = () => {
       },
     },
     {
-      accessorKey: "visitorName",
+      accessorKey: "name",
       header: ({ column }) => {
         return (
             <Button
@@ -45,6 +48,20 @@ const VisitorViews = () => {
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
               Nombre
+              <MdKeyboardArrowDown className="ml-2 h-4 w-4" />
+            </Button>
+        );
+      },
+    },
+    {
+      accessorKey: "dui",
+      header: ({ column }) => {
+        return (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+              DUI
               <MdKeyboardArrowDown className="ml-2 h-4 w-4" />
             </Button>
         );
@@ -93,16 +110,18 @@ const VisitorViews = () => {
 
     return (
       <AnimationWrap
-          className="container lg:w-[80%] flex flex-col justify-center items-center gap-12"
+          className="container lg:w-[80%] h-full min-h-dvh py-12 flex flex-col justify-center items-center gap-12"
           position={-50}
       >
         <h1 className="self-start text-3xl ">{"Lista de Visitantes"}</h1>
+        {isLoading && (<LoadingSpinner />)}
+        {data && (
         <DataTable
           columns={columns}
-          data={visitors}
-          shearchValue="visitorName"
+          data={data}
+          shearchValue="name"
           searhValuePlaceholder="Buscar por nombre..."
-        />
+        />)}
       </AnimationWrap>
     );
 };

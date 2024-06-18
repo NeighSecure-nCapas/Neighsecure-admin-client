@@ -1,6 +1,5 @@
-import { DataTable } from "@/components/ui/DataTable";
-import { Button } from "@/components/ui/button";
-import {entries} from "@/data/dummydata";
+import {DataTable} from "@/components/ui/DataTable";
+import {Button} from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,26 +8,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ColumnDef } from "@tanstack/react-table";
-import { MdDeleteSweep, MdKeyboardArrowDown, MdMoreHoriz } from "react-icons/md";
-import {useState} from "react";
-import {toast} from "sonner";
+import {ColumnDef} from "@tanstack/react-table";
+import {MdDeleteSweep, MdKeyboardArrowDown, MdMoreHoriz} from "react-icons/md";
 import {useNavigate} from "react-router-dom";
 import AnimationWrap from "@/components/ui/AnimationWraper.tsx";
+import useSWR from "swr";
+import {deleteEntries, GET} from "@/hooks/Dashboard.tsx";
+import { format}  from "date-fns";
+import {es} from "date-fns/locale";
+import LoadingSpinner from "@/components/LoadingSpinner.tsx";
 
 const VisitorViews = () => {
 
   const navigate = useNavigate();
-
-  const [entriesState, setEntriesState] = useState(entries); // Initialize state with imported homes
-
-  const handleRemoveEntry = (entry: Entries) => {
-    const updatedEntries = entriesState.filter((e) => e.id !== entry.id);
-    setEntriesState(updatedEntries); // Update state with the new homes array
-    toast.success("Listo!.", {
-      description: `Haz eleminado la entrada <span class="font-semibold"> ${entry.id}</span> con exito.`
-    });
-  };
+  const  { data, isLoading } = useSWR('/admin/entries', GET);
 
   const columns: ColumnDef<Entries>[] = [
     {
@@ -48,13 +41,22 @@ const VisitorViews = () => {
             </Button>
         );
       },
+      cell: ({cell}) => {
+        if (!cell.row.original.date) return ("-");
+        const date = new Date(cell.row.original.date);
+        return format(date, "PPP, p", {locale: es});
+      }
     },
     {
       accessorKey: "entryType",
       header: "Tipo de entrada",
+      cell: ({cell}) => {
+        if (!cell.row.original.entryType) return ("-");
+        return cell.row.original.entryType;
+      }
     },
     {
-      accessorKey: "name",
+      accessorKey: "user",
       header: ({ column }) => {
         return (
             <Button
@@ -103,7 +105,10 @@ const VisitorViews = () => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                    onClick={() => handleRemoveEntry(cell.row.original)}
+                    onClick={ async () => {
+                      await deleteEntries(`/admin/entries/delete/${cell.row.original.id}`)
+                    }
+                }
                     className="bg-red-500 cursor-pointer text-white">
                   <MdDeleteSweep className="w-5 h-5 mr-2" /> {"Eliminar"}
                 </DropdownMenuItem>
@@ -116,16 +121,19 @@ const VisitorViews = () => {
 
   return (
     <AnimationWrap
-        className="container lg:w-[80%] flex flex-col justify-center items-center gap-12"
+        className="container lg:w-[80%] min-h-dvh h-full py-12 flex flex-col justify-center items-center gap-12"
         position={-50}
     >
       <h1 className="self-start text-3xl ">{"Lista de Entradas"}</h1>
-      <DataTable
-        columns={columns}
-        data={entriesState}
-        shearchValue="name"
-        searhValuePlaceholder="Buscar por nombre..."
-      />
+      {isLoading && (<LoadingSpinner />)}
+      {data && (
+              <DataTable
+                  columns={columns}
+                  data={data}
+                  shearchValue="user"
+                  searhValuePlaceholder="Buscar por nombre..."
+              />
+        )}
     </AnimationWrap>
   );
 };

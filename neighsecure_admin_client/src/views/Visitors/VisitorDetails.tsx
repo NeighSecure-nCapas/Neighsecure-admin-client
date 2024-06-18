@@ -1,23 +1,14 @@
 import {Button} from "@/components/ui/button.tsx";
 import {MdArrowBack} from "react-icons/md";
 import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
-import {visitors} from "@/data/dummydata.ts";
+import useSWR from "swr";
+import {GET} from "@/hooks/Dashboard.tsx";
+import LoadingSpinner from "@/components/LoadingSpinner.tsx";
 
 const VisitorsDetails = () => {
 
     let {id} = useParams();
-
-    const [visit, setVisit] = useState<Visitor | null>(null);
-
-    useEffect(() => {
-        if (id) {
-            const foundVisitor = visitors.find((entry) => entry.id === id);
-            setVisit(foundVisitor!);
-        } else {
-            window.history.back()
-        }
-    }, []);
+    const {data, isLoading}  = useSWR(`/admin/users/${id}`, GET);
 
     return (
         <section
@@ -37,35 +28,26 @@ const VisitorsDetails = () => {
                 <span>Regresar</span>
             </Button>
             <hr className="w-full h-2 opacity-85"/>
-            <div className="flex flex-row justify-around gap-8 min-h-[60dvh] items-center w-full">
-                <div className={'flex flex-col gap-8'}>
-                    <span className={'font-medium'}>
-                        Nombre
-                    </span>
-                    <span>
-                            {visit?.visitorName}
-                    </span>
-                    <span className={'font-medium'}>
-                            Fecha
-                    </span>
-                    <span>
-                            {visit?.date}
-                    </span>
-                    <span className={'font-medium'}>
-                            Casa a visitar
-                    </span>
-                    <span>
-                            {visit?.homeNumber}
-                    </span>
-                </div>
-                <div className={'flex flex-col w-1/3 justify-center gap-8'}>
-                    <img
-                        className={'h-auto rounded-2xl'}
-                        src={'/cuate.svg'}
-                        alt={'visitor'}
-                    />
-                </div>
-            </div>
+            {isLoading && (<LoadingSpinner/>)}
+            {data && (
+                    <div className="flex flex-row justify-around gap-8 min-h-[60dvh] items-center w-full">
+                        <div className={'flex flex-col gap-8'}>
+                            <span className={'font-medium'}>Nombre</span>
+                            <span>{data?.name}</span>
+                            <span className={'font-medium'}>DUI</span>
+                            <span>{data?.dui}</span>
+                            <span className={'font-medium'}>Numero de telefono</span>
+                            <span>{data.phoneNumber ?  data.phoneNumber : '-'}</span>
+                        </div>
+                        <div className={'flex flex-col w-1/3 justify-center gap-8'}>
+                        <img
+                                className={'h-auto rounded-2xl'}
+                                src={'/cuate.svg'}
+                                alt={'visitor'}
+                            />
+                        </div>
+                    </div>
+                )}
         </section>
     )
 }

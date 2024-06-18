@@ -7,11 +7,7 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {InfoMessage} from "@/views/Home/HomesAddNew.tsx";
-
-type SecurityFormProps = {
-    user: User;
-    isNewUser?: boolean;
-};
+import {GET, POST} from "@/hooks/Dashboard.tsx";
 
 const duiRegex = new RegExp(/^\d{8}-\d$/);
 
@@ -25,52 +21,41 @@ const addMemberSchema = z.object({
         .regex(duiRegex, "El formato del DUI no es válido. Ej. 00000000-0"),
 });
 
-const SecurityForm = ({
-                          user,
-                          isNewUser
-                      }: SecurityFormProps) => {
+const SecurityForm = () => {
 
     const form = useForm<z.infer<typeof addMemberSchema>>({
         resolver: zodResolver(addMemberSchema),
         defaultValues: {
-            email:  !isNewUser ? user.email :"",
-            dui: !isNewUser ? user.dui :"",
+            email: "",
+            dui: "",
         },
     });
 
     const onSubmit = async (values: z.infer<typeof addMemberSchema>) => {
         // * Check if the user is already exists
-        const userExists = users.find((user) => user.email === values?.email);
+        const userExists : User = await GET(`/admin/users/${values.dui}/${values.email}`);
 
-        // * If the user is not a new user, just update the user info
-        if (!isNewUser) {
-            userExists!.email = values.email;
-            userExists!.dui = values.dui;
-            toast.success("Listo!.", {
-                description: `Haz actualizado a ${userExists!.fullName} con exito.`
-            });
-            form.reset();
-            return window.history.back();
-        }
-
-        // * If we are adding an existing user
-        if (isNewUser && userExists!.roles.includes("visitante")) {
-            userExists!.roles.push("vigilante");
-            toast.success("Listo!.", {
-                description: `Haz agregado a ${userExists!.fullName} con exito.`
-            });
-            form.reset();
-            return window.history.back();
-        }
-
-        // * If the user is already exists and has 'vigilante' rol, return an error message
-        if (userExists && userExists.roles.includes("vigilante")) {
+        if (!userExists) {
             toast.warning("¡Ups! Ha ocurrido un problema.", {
-                description: "El usuario ya se existe y es vigilante.",
+                description: "El usuario no existe.",
                 action: <ToastAction altText="Ok!">Entendido!</ToastAction>,
             });
             return;
         }
+
+        // * If the user is already exists and has 'vigilante' rol, return an error message
+        if (userExists && userExists.roles.map((role) => role.rol).includes("Vigilante")) {
+            toast.warning("¡Ups! Ha ocurrido un problema.", {
+                description: "El usuario ya existe y es vigilante.",
+                action: <ToastAction altText="Ok!">Entendido!</ToastAction>,
+            });
+            return;
+        }
+
+
+
+        form.reset();
+        return window.history.back();
     }
 
     return (

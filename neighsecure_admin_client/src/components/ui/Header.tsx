@@ -15,6 +15,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {Link, useNavigate, useLocation} from "react-router-dom";
 import {routes} from "@/data/dummydata.ts";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip.tsx";
+import {useAuthContext} from "@/providers/AuthContext.tsx";
 
 export default function Header() {
 
@@ -67,7 +68,12 @@ export default function Header() {
                         </div>
                     </div>
 
-                    <HeaderItem hidden={hidden} text={"Cerrar sesión"} route={"/"} isSelected={true}/>
+                    <HeaderItem
+                        hidden={hidden}
+                        text={"Cerrar sesión"}
+                        isSelected={true}
+                        route={"/logout"}
+                    />
                 </div>
 
                 <motion.div
@@ -135,13 +141,17 @@ interface HeaderItemProps {
 
 function HeaderItem({icon, text, route, isSelected = false, active = false, hidden}: HeaderItemProps) {
     const navigate = useNavigate();
+    const { logout } = useAuthContext();
     return (
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger>
                     <Button
                         onClick={() => {
-                            navigate(route);
+                            if (route === "/logout")
+                                logout();
+                            else
+                                navigate(route);
                         }}
                         size={hidden ? 'icon' : 'default'}
                         variant={"ghost"}
@@ -157,10 +167,8 @@ function HeaderItem({icon, text, route, isSelected = false, active = false, hidd
                         >{text}</motion.span>
                     </Button>
                 </TooltipTrigger>
-                <TooltipContent>
-                    {
-                        hidden ? text : null
-                    }
+                <TooltipContent side="right" sideOffset={5}>
+                    {hidden ? text : null}
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>

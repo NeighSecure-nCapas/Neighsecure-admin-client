@@ -2,14 +2,11 @@ import { useAuthContext } from "@/providers/AuthContext";
 import LoginImage from "../assets/loginImage.svg";
 import NeighLogo from "../assets/NeighLogo.svg";
 import { Button } from "@/components/ui/button.tsx";
-
 import { FcGoogle } from "react-icons/fc";
-import { useNavigate } from "react-router-dom";
 
 export default function LoginView() {
 
   const { login } = useAuthContext();
-  const navigate = useNavigate();
 
   return (
     <>
@@ -34,13 +31,10 @@ export default function LoginView() {
         <div className={"flex flex-col gap-8 items-start w-1/2"}>
           <h1 className={"text-2xl"}>{"Bienvenido"}/a</h1>
           <p className={"text-secondaryText text-xl font-light w-1/2"}>
-            {
-              "Modulo de administración de NeighSecure, por favor inicia sesión."
-            }
+            {"Modulo de administración de NeighSecure, por favor inicia sesión."}
           </p>
           <Button onClick={() => {
-            //login()
-            navigate("/admin");
+            login()
           }} size={"lg"}>
             <FcGoogle className={"h-[32px] w-[32px] mr-4"} />
             {"Continuar con Google"}
