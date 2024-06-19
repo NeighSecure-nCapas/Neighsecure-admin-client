@@ -1,36 +1,41 @@
 import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts"
 
-const dataNew = [
-    {
-        Month: "Ene",
-        Total: 30,
-    },
-    {
-        Month: "Feb",
-        Total: 10,
-    },
-    {
-        Month: "Mar",
-        Total: 5,
-    },
-    {
-        Month: "Abr",
-        Total: 25,
-    },
-    {
-        Month: "May",
-        Total: 90,
-    },
-    {
-        Month: "Jun",
-        Total: 40,
-    },
-]
 
-export default function LinearOverview() {
+function groupEntriesByMonth(entries: any[]) {
+    return entries.reduce((groups: { [x: string]: number; }, entry: { date: string | number | Date; }) => {
+        // Convertir la fecha a un objeto Date
+        const date = new Date(entry.date);
+
+        // Obtener el mes y el año de la fecha
+        const month = date.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que añadimos 1 para obtener el mes correcto
+        const year = date.getFullYear();
+
+        // Crear la clave del grupo
+        const groupKey = `${year}-${month < 10 ? '0' + month : month}`; // Asegurarse de que el mes siempre tenga dos dígitos
+
+        // Si el grupo no existe, crearlo
+        if (!groups[groupKey]) {
+            groups[groupKey] = 0;
+        }
+
+        // Incrementar el contador de entradas para este grupo
+        groups[groupKey]++;
+
+        return groups;
+    }, {});
+}
+
+export default function LinearOverview({data} : {data : DashboardData}) {
+
+    const entriesByMonth = groupEntriesByMonth(data.entries);
+    const chartData = Object.entries(entriesByMonth).map(([key, value]) => ({
+        Month: key,
+        Total: value,
+    }));
+
     return (
         <ResponsiveContainer width="90%" height={300} className={"self-center"}>
-            <LineChart data={dataNew}>
+            <LineChart data={chartData}>
                 <Tooltip/>
                 <XAxis
                     dataKey="Month"

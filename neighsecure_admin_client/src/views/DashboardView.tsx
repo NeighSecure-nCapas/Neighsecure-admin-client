@@ -4,63 +4,71 @@ import React from "react";
 import Overview from "@/components/ui/Overview.tsx";
 import LinearOverview from "@/components/ui/LinearOverview.tsx";
 import useSWR from "swr";
-import { GET } from "@/hooks/Dashboard.tsx";
+import {GET} from "@/hooks/Dashboard.tsx";
+import LoadingSpinner from "@/components/LoadingSpinner.tsx";
 
 export default function DashboardView() {
 
-    const  { data, isLoading } = useSWR('/admin/entries', GET);
-    
+    const {data, isLoading}: { data: DashboardData, isLoading: Boolean } = useSWR('/admin/dashboard', GET);
+
     return (
-      <section className={"container flex flex-col gap-12 h-dvh justify-center items-center"}>
-        <div
-          className={"w-full flex flex-row gap-10 items-center justify-center"}
-        >
-            {isLoading && (
-                <>
-                    <DashboardCardItemSkeleton />
-                    <DashboardCardItemSkeleton />
-                    <DashboardCardItemSkeleton />
-                </>
-                )
-            }
-            {
-                data && (
+        <section className={"container flex flex-col gap-12 h-dvh justify-center items-center"}>
+            <div
+                className={"w-full flex flex-row gap-10 items-center justify-center"}
+            >
+                {isLoading && (
                     <>
-                        <DashboardCardItem
-                            title={"# de visitantes de hoy"}
-                            stats={23}
-                            subtitle={"+5.1 % que el mes pasado"}
-                            Icon={<MdPeople size={16} className={"text-primaryColor"} />}
-                        />
-                        <DashboardCardItem
-                            title={"Total de hogares registrados"}
-                            stats={2500}
-                            subtitle={"+10.1 % que el mes pasado"}
-                            Icon={<MdHome size={16} className={"text-primaryColor"} />}
-                        />
-                        <DashboardCardItem
-                            title={"Total residentes registrados"}
-                            stats={1156}
-                            subtitle={"+20.1 % que el mes pasado"}
-                            Icon={<MdCardMembership size={16} className={"text-primaryColor"} />}
-                        />
+                        <DashboardCardItemSkeleton/>
+                        <DashboardCardItemSkeleton/>
+                        <DashboardCardItemSkeleton/>
+                    </>
+                )
+                }
+                {
+                    data && (
+                        <>
+                            <DashboardCardItem
+                                title={"# de visitantes de hoy"}
+                                stats={data.totalVisitorsToday}
+                                subtitle={"+5.1 % que el mes pasado"}
+                                Icon={<MdPeople size={16} className={"text-primaryColor"}/>}
+                            />
+                            <DashboardCardItem
+                                title={"Total de hogares registrados"}
+                                stats={data.totalHomes}
+                                subtitle={"+10.1 % que el mes pasado"}
+                                Icon={<MdHome size={16} className={"text-primaryColor"}/>}
+                            />
+                            <DashboardCardItem
+                                title={"Total residentes registrados"}
+                                stats={data.totalResidents}
+                                subtitle={"+20.1 % que el mes pasado"}
+                                Icon={<MdCardMembership size={16} className={"text-primaryColor"}/>}
+                            />
+                        </>
+                    )
+                }
+            </div>
+            {isLoading && (<LoadingSpinner/>)}
+            {data &&
+                (
+                    <>
+                        <div className={"w-full flex-col flex gap-6 px-8"}>
+                            <h1 className={"text-1xl font-medium self-start"}>
+                                {"Total de entradas por mes"}
+                            </h1>
+                            <LinearOverview data={data}/>
+                        </div>
+                        <div className={"w-full flex-col flex gap-6 px-8"}>
+                            <h1 className={"text-1xl font-medium"}>
+                                {"Total entradas por hora"}
+                            </h1>
+                            <Overview data={data}/>
+                        </div>
                     </>
                 )
             }
-        </div>
-        <div className={"w-full flex-col flex gap-6 px-8"}>
-          <h1 className={"text-1xl font-medium self-start"}>
-            {"Total de entradas por mes"}
-          </h1>
-          <LinearOverview />
-        </div>
-        <div className={"w-full flex-col flex gap-6 px-8"}>
-          <h1 className={"text-1xl font-medium"}>
-            {"Total entradas por hora"}
-          </h1>
-          <Overview />
-        </div>
-      </section>
+        </section>
     );
 }
 

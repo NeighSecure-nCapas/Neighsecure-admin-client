@@ -22,6 +22,27 @@ type Home = {
   membersNumber?: number
 }
 
+type DashboardData = {
+  totalResidents: number,
+  totalVisitorsToday: number,
+  totalHomes: number,
+  entries: Entry[],
+}
+
+type Entry = {
+  id: string
+  user: User | null
+  date: Date
+  home: HomeData | null
+  entryType: string
+}
+
+type HomeData = {
+  id: string
+  homeNumber: number
+  homeBoss: string
+}
+
 type Entries = {
   id: string
   date: string
