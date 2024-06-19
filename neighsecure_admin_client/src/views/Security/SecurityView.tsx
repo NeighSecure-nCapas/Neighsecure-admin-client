@@ -79,9 +79,10 @@ const SecurityView = () => {
                             </DropdownMenuItem>
                             <DropdownMenuSeparator/>
                             <DropdownMenuItem
-                                onClick={() => deleteUser(
-                                    `/admin/users/delete/${cell.row.original.id}`
-                                )}
+                                onClick={ async () => {
+                                    await deleteUser(`/admin/users/delete/${cell.row.original.id}`, "Vigilante")
+                                }
+                            }
                                 className="bg-red-500 cursor-pointer text-white">
                                 <MdDeleteSweep className="w-5 h-5 mr-2"/> {"Eliminar"}
                             </DropdownMenuItem>

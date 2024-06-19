@@ -81,7 +81,7 @@ export const deleteEntries = async (url: string) => {
     }
 }
 
-export const deleteUser = async (url: string) => {
+export const deleteUser = async (url : string, role: string) => {
     const token = localStorage.getItem("neigh_secure_token")
     try{
         toast.promise(axios.patch(
@@ -99,7 +99,7 @@ export const deleteUser = async (url: string) => {
                     if (payload.status != 200) {
                         throw new Error("Error fetching entry");
                     }
-                    mutate('/admin/users/role/')
+                    mutate(`/admin/users/role/${role}`);
                     return "User deleted successfully";
                 },
                 error: "Error deleting user",

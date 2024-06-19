@@ -1,8 +1,6 @@
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {users} from "@/data/dummydata";
-import {ToastAction} from "@/components/ui/toast";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
@@ -38,7 +36,6 @@ const SecurityForm = () => {
         if (!userExists) {
             toast.warning("¡Ups! Ha ocurrido un problema.", {
                 description: "El usuario no existe.",
-                action: <ToastAction altText="Ok!">Entendido!</ToastAction>,
             });
             return;
         }
@@ -47,15 +44,16 @@ const SecurityForm = () => {
         if (userExists && userExists.roles.map((role) => role.rol).includes("Vigilante")) {
             toast.warning("¡Ups! Ha ocurrido un problema.", {
                 description: "El usuario ya existe y es vigilante.",
-                action: <ToastAction altText="Ok!">Entendido!</ToastAction>,
             });
             return;
         }
 
-
-
-        form.reset();
-        return window.history.back();
+        POST(`/admin/addGuard/${userExists.id}`).then(
+                () => {
+                    form.reset();
+                    return window.history.back();
+            }
+        )
     }
 
     return (
@@ -64,7 +62,7 @@ const SecurityForm = () => {
             className={"flex flex-col gap-8 items-start"}
         >
             <h2 className="text-[18px] font-medium">
-                {isNewUser ? "Agregar nuevo vigilante" : "Actualizar información del vigilante"}
+                {"Agregar nuevo vigilante"}
             </h2>
             <InfoMessage
                 message="Por favor ingresa el correo electrónico, de la persona que quieres agregar como vigilante."/>
