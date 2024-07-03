@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { users } from "@/data/dummydata";
 import { ToastAction } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
-import { InfoMessage } from "./AddNewHome";
+import { InfoMessage } from "./HomesAddNew.tsx";
 import { Button } from "@/components/ui/button";
 import {toast} from "sonner";
 
@@ -28,7 +28,7 @@ type MemberInfoProps = {
   setNewHome: (home: Home) => void;
 };
 
-const MemberInfo = ({ home, membersNumber, setNewHome }: MemberInfoProps) => {
+const HomesMemberInfo = ({ home, membersNumber, setNewHome }: MemberInfoProps) => {
   const form = useForm<z.infer<typeof addMemberSchema>>({
     resolver: zodResolver(addMemberSchema),
     defaultValues: {
@@ -145,4 +145,4 @@ const MemberInfo = ({ home, membersNumber, setNewHome }: MemberInfoProps) => {
   );
 };
 
-export default MemberInfo;
+export default HomesMemberInfo;

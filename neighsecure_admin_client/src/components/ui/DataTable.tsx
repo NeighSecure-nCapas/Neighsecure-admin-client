@@ -28,8 +28,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./button";
 import { Input } from "./input";
-import { MdAdd, MdKeyboardArrowDown, MdSearch } from "react-icons/md";
-
+import {MdAdd, MdErrorOutline, MdSearch} from "react-icons/md";
+import { VscSettings } from "react-icons/vsc";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -75,7 +75,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-4 w-full bg-gray-50 p-4 min-h-[50dvh] rounded-xl">
       <div className="flex items-center py-4">
         <MdSearch className="h-5 w-5 mr-3 text-muted-foreground" />
         <Input
@@ -86,13 +86,13 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn(shearchValue)?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="w-[300px]"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="ml-auto">
+              <VscSettings className="mr-3 h-4 w-4" />
               Columnas
-              <MdKeyboardArrowDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
         </DropdownMenu>
         {
           addValue && (
-            <Button className="ml-4" size={"icon"} onClick={onAddValue}>
+            <Button className="ml-4 py-6" size={"icon"} onClick={onAddValue}>
               <MdAdd className="h-5 w-5" />
             </Button>
           )
@@ -148,7 +148,7 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row ) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
@@ -169,7 +169,10 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  <div className={'flex flex-col items-center justify-center gap-4'}>
+                    <MdErrorOutline className={'h-7 w-7 font-light'}/>
+                    {'No hay resultados disponibles'}
+                  </div>
                 </TableCell>
               </TableRow>
             )}
@@ -183,7 +186,7 @@ export function DataTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Previous
+          Anterior
         </Button>
         <Button
           variant="outline"
@@ -191,7 +194,7 @@ export function DataTable<TData, TValue>({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Next
+          Siguiente
         </Button>
       </div>
     </div>

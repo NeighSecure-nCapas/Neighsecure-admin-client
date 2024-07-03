@@ -1,4 +1,4 @@
-import {Navigate, Outlet} from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 //import {PRIVATE} from "@/routes/path.jsx";
 //import {UseUserContext} from "@/contexts/UserContext.jsx";
 

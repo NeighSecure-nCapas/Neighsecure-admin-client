@@ -1,10 +1,16 @@
 type User = {
   id?: string
-  fullName: string
+  name: string
   email?: string
-  roles: string[]
+  roles: Role[]
   homeId?: string
   dui: string
+  assignedTerminal?: string | null
+}
+
+type Role = {
+    rolId: string
+    rol: string
 }
 
 type Home = {
@@ -16,19 +22,32 @@ type Home = {
   membersNumber?: number
 }
 
-type Visitor = {
+type DashboardData = {
+  totalResidents: number,
+  totalVisitorsToday: number,
+  totalHomes: number,
+  entries: Entry[],
+}
+
+type Entry = {
   id: string
-  date: string
-  visitType: string
-  visitorName: string
-  homeNumber: string
+  user: User | null
+  date: Date
+  home: HomeData | null
+  entryType: string
+}
+
+type HomeData = {
+  id: string
+  homeNumber: number
+  homeBoss: string
 }
 
 type Entries = {
   id: string
   date: string
   entryType: string
-  name: string | null
+  user: string | null
   homeNumber: string | null
   comment: string | null
 }
