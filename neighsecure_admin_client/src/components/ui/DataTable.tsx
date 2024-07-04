@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useEffect } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   SortingState,
   getSortedRowModel,
   getFilteredRowModel,
   useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
+  VisibilityState
+} from '@tanstack/react-table';
 
 import {
   Table,
@@ -18,21 +17,23 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  TableRow
+} from '@/components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "./button";
-import { Input } from "./input";
-import {MdAdd, MdErrorOutline, MdSearch} from "react-icons/md";
-import { VscSettings } from "react-icons/vsc";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { Button } from './button';
+import { Input } from './input';
+import {MdAdd, MdErrorOutline, MdSearch} from 'react-icons/md';
+import { VscSettings } from 'react-icons/vsc';
+import { useSearchParams } from 'react-router-dom';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
+  totalPages: number;
   data: TData[];
   shearchValue: string;
   searhValuePlaceholder: string;
@@ -42,17 +43,31 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
+  totalPages,
   data,
   shearchValue,
   searhValuePlaceholder,
   addValue,
-  onAddValue,
+  onAddValue
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialPage = parseInt(searchParams.get('page') || '0', 10); // Convertir a índice base 0
+
+  const [pagination, setPagination] = React.useState({
+    pageIndex: initialPage,
+    pageSize: 10
+  });
+
+  // Actualizar el estado de paginación y la URL cuando se monta el componente
+  useEffect(() => {
+    setPagination({ ...pagination, pageIndex: initialPage });
+  }, [initialPage]);
 
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -61,17 +76,23 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    rowCount: data.length,
+    pageCount: totalPages,
+    onPaginationChange: setPagination,
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    autoResetPageIndex: false,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-    },
+      pagination
+    }
   });
 
   return (
@@ -81,7 +102,7 @@ export function DataTable<TData, TValue>({
         <Input
           placeholder={searhValuePlaceholder}
           value={
-            (table.getColumn(shearchValue)?.getFilterValue() as string) ?? ""
+            (table.getColumn(shearchValue)?.getFilterValue() as string) ?? ''
           }
           onChange={(event) =>
             table.getColumn(shearchValue)?.setFilterValue(event.target.value)
@@ -117,7 +138,7 @@ export function DataTable<TData, TValue>({
         </DropdownMenu>
         {
           addValue && (
-            <Button className="ml-4 py-6" size={"icon"} onClick={onAddValue}>
+            <Button className="ml-4 py-6" size={'icon'} onClick={onAddValue}>
               <MdAdd className="h-5 w-5" />
             </Button>
           )
@@ -151,7 +172,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row ) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell className="text-center py-4" key={cell.id}>
@@ -183,7 +204,11 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.previousPage()}
+          onClick={() => {
+            const newPageIndex = Math.max(0, pagination.pageIndex - 1);
+            setPagination({ ...pagination, pageIndex: newPageIndex });
+            setSearchParams({ page: (newPageIndex).toString() });
+          }}
           disabled={!table.getCanPreviousPage()}
         >
           Anterior
@@ -191,7 +216,11 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
+          onClick={() => {
+            const newPageIndex = pagination.pageIndex + 1;
+            setPagination({ ...pagination, pageIndex: newPageIndex });
+            setSearchParams({ page: (newPageIndex).toString() });
+          }}
           disabled={!table.getCanNextPage()}
         >
           Siguiente
