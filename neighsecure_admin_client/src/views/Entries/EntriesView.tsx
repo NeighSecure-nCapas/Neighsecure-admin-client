@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {ColumnDef} from '@tanstack/react-table';
 import {MdDeleteSweep, MdKeyboardArrowDown, MdMoreHoriz} from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import AnimationWrap from '@/components/ui/AnimationWraper.tsx';
 import useSWR from 'swr';
 import {deleteEntries, GET} from '@/hooks/Dashboard.tsx';
@@ -22,7 +22,9 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 const VisitorViews = () => {
 
   const navigate = useNavigate();
-  const { data, isLoading } = useSWR('/admin/entries', GET);
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get('page') || 0;
+  const { data, isLoading } = useSWR(`/admin/entries?page=${page}&size=10`, GET);
 
   const columns: ColumnDef<Entries>[] = [
     {
@@ -144,7 +146,8 @@ const VisitorViews = () => {
       {data && (
               <DataTable
                   columns={columns}
-                  data={data}
+                  data={data.entries}
+                  totalPages={data.totalPages}
                   shearchValue="user"
                   searhValuePlaceholder="Buscar por nombre..."
               />

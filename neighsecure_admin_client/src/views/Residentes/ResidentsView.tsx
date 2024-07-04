@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import AnimationWrap from '@/components/ui/AnimationWraper.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { GET } from '@/hooks/Dashboard.tsx';
 import LoadingSpinner from '@/components/LoadingSpinner.tsx';
@@ -24,7 +24,9 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 export default function ResidentsView() {
 
   const navigate = useNavigate();
-  const { data, isLoading } = useSWR('/admin/users/role/Residente', GET);
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get('page') || 0;
+  const { data, isLoading } = useSWR(`/admin/users/role/residente?page=${page}&size=10`, GET);
 
   const columns: ColumnDef<User>[] = [
     {
@@ -101,7 +103,7 @@ export default function ResidentsView() {
 
   return (
     <AnimationWrap
-      className="container lg:w-[80%] py-12 flex flex-col justify-center items-center gap-12"
+      className="container lg:w-[80%] min-h-dvh h-full py-12 flex flex-col justify-center items-center gap-12"
       position={-50}
     >
       <h1 className="self-start text-3xl ">
@@ -112,6 +114,7 @@ export default function ResidentsView() {
         <DataTable
           columns={columns}
           data={data.users}
+          totalPages={data.totalPages}
           shearchValue="name"
           searhValuePlaceholder="Buscar por nombre..."
         />)}

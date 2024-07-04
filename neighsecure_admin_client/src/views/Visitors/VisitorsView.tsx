@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { MdKeyboardArrowDown, MdMoreHoriz } from 'react-icons/md';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import AnimationWrap from '@/components/ui/AnimationWraper.tsx';
 import useSWR from 'swr';
 import {GET} from '@/hooks/Dashboard.tsx';
@@ -19,7 +19,9 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 const VisitorViews = () => {
 
   const navigate = useNavigate();
-  const { data, isLoading } = useSWR('/admin/users/role/Visitante', GET);
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get('page') || 0;
+  const { data, isLoading } = useSWR(`/admin/users/role/visitante?page=${page}&size=10`, GET);
 
   const columns: ColumnDef<User>[] = [
     {
@@ -125,7 +127,7 @@ const VisitorViews = () => {
 
     return (
       <AnimationWrap
-          className="container lg:w-[80%] h-full min-h-dvh py-12 flex flex-col justify-center items-center gap-12"
+          className="container lg:w-[80%] min-h-dvh h-full py-12 flex flex-col justify-center items-center gap-12"
           position={-50}
       >
         <h1 className="self-start text-3xl ">{'Lista de Visitantes'}</h1>
@@ -133,7 +135,8 @@ const VisitorViews = () => {
         {data && (
         <DataTable
           columns={columns}
-          data={data}
+          data={data.users}
+          totalPages={data.totalPages}
           shearchValue="name"
           searhValuePlaceholder="Buscar por nombre..."
         />)}
