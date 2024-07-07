@@ -1,80 +1,77 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from 'react';
 
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {MdArrowBack, MdClose, MdInfoOutline} from "react-icons/md";
-import {LiaIdCard} from "react-icons/lia";
-import PopoverDemo from "./HomesPopover.tsx";
-import HomesMemberInfo from "./HomesMemberInfo.tsx";
-import {toast} from "sonner"
-import {homes} from "@/data/dummydata";
-import {useParams} from "react-router-dom";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { MdArrowBack, MdClose, MdInfoOutline } from 'react-icons/md';
+import { LiaIdCard } from 'react-icons/lia';
+import PopoverDemo from './HomesPopover.tsx';
+import HomesMemberInfo from './HomesMemberInfo.tsx';
+import { toast } from 'sonner';
+import { homes } from '@/data/dummydata';
+// import { useParams } from 'react-router-dom';
 
 const HomesAddNew = () => {
-    let {id} = useParams();
+    // const {id} = useParams();
+    // const [home, setNewHome] = useState<Home | null>(null);
+    // const [isNewHome, setIsNewHome] = useState(false);
+    // useEffect(() => {
+    //     if (id) {
+    //         setIsNewHome(false);
+    //         const newHome = homes.find((home) => home.id === id) || null;
+    //         setHomeNumberState({
+    //             homeNumber: newHome!.homeNumber,
+    //             errorFieldHomeNumber: ''
+    //         });
+    //         setNewHome(newHome);
+    //     } else {
+    //         setIsNewHome(true);
+    //         setNewHome({
+    //             admin: null,
+    //             users: []
+    //         });
+    //     }
+    // }, []);
 
-    const [home, setNewHome] = useState<Home | null>(null);
-    const [isNewHome, setIsNewHome] = useState(false);
-
-    useEffect(() => {
-        if (id) {
-            setIsNewHome(false);
-            const newHome = homes.find((home) => home.id === id) || null;
-            setHomeNumberState({
-                homeNumber: newHome!.homeNumber,
-                errorFieldHomeNumber: "",
-            });
-            setNewHome(newHome);
-        } else {
-            setIsNewHome(true);
-            setNewHome({
-                admin: null,
-                users: [],
-            });
-        }
-    }, []);
-
-    const [membersNumber, setMembersNumber] = useState<number>(
-        home?.membersNumber || 5
-    );
+    const [membersNumber, setMembersNumber] = useState<number>(5);
     const [homeNumberState, setHomeNumberState] = useState<{
         homeNumber?: number;
         errorFieldHomeNumber?: string;
     }>({
         homeNumber: 0,
-        errorFieldHomeNumber: "",
+        errorFieldHomeNumber: ''
     });
 
-    const onSaveHome = async () => {
-        if (!isNewHome) {
-            // TODO: Save updatedHomes to the API
-            home!.homeNumber = homeNumberState.homeNumber;
-            home!.membersNumber = membersNumber;
+    const [home, setNewHome] = useState<Home | null>();
 
-            toast.success("¡Hogar actualizado con éxito!", {
-                description: "El hogar ha sido actualizado con éxito.",
-            });
-            window.history.back();
-            return;
-        }
+    const onSaveHome = async () => {
+        // if (!isNewHome) {
+        //     // TODO: Save updatedHomes to the API
+        //     home!.homeNumber = homeNumberState.homeNumber;
+        //     home!.membersNumber = membersNumber;
+        //
+        //     toast.success('¡Hogar actualizado con éxito!', {
+        //         description: 'El hogar ha sido actualizado con éxito.'
+        //     });
+        //     window.history.back();
+        //     return;
+        // }
 
         if (!homeNumberState.homeNumber && !home!.homeNumber) {
             setHomeNumberState({
-                errorFieldHomeNumber: "Este es un campo requerido.",
+                errorFieldHomeNumber: 'Este es un campo requerido.'
             });
             return;
         }
 
         if (!home!.admin) {
-            toast.error("¡Ups! Residente encargado necesario.", {
+            toast.error('¡Ups! Residente encargado necesario.', {
                 description:
-                    "Es necesario que agregues al menos un residente encargado.",
-                dismissible: true,
+                    'Es necesario que agregues al menos un residente encargado.',
+                dismissible: true
             });
             return;
         }
 
-        home!.id = `${homes.length + 1}`;
         home!.homeNumber = homeNumberState.homeNumber;
         home!.membersNumber = membersNumber;
 
@@ -89,19 +86,12 @@ const HomesAddNew = () => {
         // }
 
         // * Save home
-
-        homes.push(home!);
-
-        toast.success("¡Hogar guardado con éxito!", {
-            description: "El hogar ha sido guardado con éxito."
-        });
-        window.history.back();
     };
 
     const handleRemoveUser = async () => {
         setNewHome({...home, admin: null});
-        toast.success("Listo!.", {
-            description: `Haz eleminado con exito.`
+        toast.success('Listo!.', {
+            description: 'Haz eleminado con exito.'
         });
     };
 
@@ -109,13 +99,13 @@ const HomesAddNew = () => {
         <>
             <section
                 className={
-                    "container flex flex-col gap-8 min-h-dvh justify-center items-center p-12"
+                    'container flex flex-col gap-8 min-h-dvh justify-center items-center p-12'
                 }
             >
                 <Button
-                    className={"space-x-4 self-start"}
-                    variant={"ghost"}
-                    size={"lg"}
+                    className={'space-x-4 self-start'}
+                    variant={'ghost'}
+                    size={'lg'}
                     onClick={() => {
                         window.history.back();
                     }}
@@ -125,9 +115,9 @@ const HomesAddNew = () => {
                 </Button>
                 <hr className="w-full h-2 opacity-85"/>
                 <div className="flex flex-row justify-around items-start w-full">
-                    <div className={"flex flex-col gap-8"}>
-                        <label className={"flex flex-col gap-6 text-[18px]"}>
-                            <span className="font-medium">{"Informacion del hogar"}</span>
+                    <div className={'flex flex-col gap-8'}>
+                        <label className={'flex flex-col gap-6 text-[18px]'}>
+                            <span className="font-medium">{'Informacion del hogar'}</span>
                             <Input
                                 id="homeNumber"
                                 type="number"
@@ -135,29 +125,29 @@ const HomesAddNew = () => {
                                 value={homeNumberState.homeNumber || home?.homeNumber}
                                 onChange={(e) =>
                                     setHomeNumberState({
-                                        homeNumber: parseInt(e.target.value),
+                                        homeNumber: parseInt(e.target.value)
                                     })
                                 }
-                                className={"w-[375px]"}
+                                className={'w-[375px]'}
                                 errorMessage={homeNumberState.errorFieldHomeNumber}
-                                placeholder={"Número de casa"}
+                                placeholder={'Número de casa'}
                                 required
                             />
                         </label>
-                        <h2 className="text-[18px] font-medium">{"Residente encargado"}</h2>
+                        <h2 className="text-[18px] font-medium">{'Residente encargado'}</h2>
                         {home?.admin && (
                             <div className="flex flex-row gap-6 justify-around items-center">
                                 <LiaIdCard className="h-10 w-10"/>
                                 <div className="flex flex-col gap-2 shrink-0 mr-auto">
-                                    <span className="text-lg">{home?.admin?.fullName}</span>
+                                    <span className="text-lg">{home?.admin?.name}</span>
                                     <span className="text-secondaryText text-sm font-light">
-                    {"Residente encargado"}
+                    {'Residente encargado'}
                   </span>
                                 </div>
                                 <Button
                                     onClick={handleRemoveUser}
-                                    variant={"ghost"}
-                                    size={"icon"}
+                                    variant={'ghost'}
+                                    size={'icon'}
                                 >
                                     <MdClose className="h-6 w-6 cursor-pointer"/>
                                 </Button>
@@ -167,13 +157,13 @@ const HomesAddNew = () => {
                             <div className="flex flex-row items-center justify-center gap-4 text-secondaryText">
                                 <MdInfoOutline className="h-6 w-6"/>
                                 <span className="text-[14px]">
-                  {"No hay ningún residente encargado."}
+                  {'No hay ningún residente encargado.'}
                 </span>
                             </div>
                         )}
                         <>
                             <h2 className="text-[18px] font-medium">
-                                {"Miembros del hogar"}
+                                {'Miembros del hogar'}
                             </h2>
                             <div className="flex flex-col gap-6">
                                 {home?.users?.map((user, index) =>
@@ -203,8 +193,8 @@ const HomesAddNew = () => {
                 </div>
                 <Button
                     onClick={onSaveHome}
-                    variant={"default"}
-                    size={"lg"}
+                    variant={'default'}
+                    size={'lg'}
                     className="mt-20"
                 >
                     Guardar Hogar
@@ -232,12 +222,12 @@ export const UserCard = (
         >
             <LiaIdCard className="h-10 w-10"/>
             <div className="flex flex-col mr-auto gap-2 shrink-0">
-                <span className="text-sm">{user?.fullName || "Fernando Figueroa"}</span>
+                <span className="text-sm">{user?.fullName || 'Fernando Figueroa'}</span>
                 <span className="text-secondaryText text-sm font-light">
-          {user?.roles[0] || "Residente encargado"}
+          {user?.roles[0] || 'Residente encargado'}
         </span>
             </div>
-            <Button onClick={handleRemoveUser} variant={"ghost"} size={"icon"}>
+            <Button onClick={handleRemoveUser} variant={'ghost'} size={'icon'}>
                 <MdClose className="h-6 w-6 cursor-pointer"/>
             </Button>
         </div>

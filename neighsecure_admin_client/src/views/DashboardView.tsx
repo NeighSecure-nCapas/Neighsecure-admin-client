@@ -1,20 +1,19 @@
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {MdCardMembership, MdHome, MdPeople} from 'react-icons/md';
 import React from 'react';
-import Overview from '@/components/ui/Overview.tsx';
-import LinearOverview from '@/components/ui/LinearOverview.tsx';
 import useSWR from 'swr';
-import {GET} from '@/hooks/Dashboard.tsx';
+import { GET } from '@/hooks/Dashboard.tsx';
 import LoadingSpinner from '@/components/LoadingSpinner.tsx';
-
+import DashboardBarChart from '@/components/ui/DashboardBarChart.tsx';
+import DashboardLinearChart from '@/components/ui/DashboardLinearChart.tsx';
 export default function DashboardView() {
 
     const {data, isLoading}: { data: DashboardData, isLoading: boolean } = useSWR('/admin/dashboard', GET);
 
     return (
-        <section className={'container flex flex-col gap-12 py-12 h-dvh justify-center items-center'}>
+        <section className={'container flex flex-col gap-8 py-12 min-h-dvh justify-center items-center'}>
             <div
-                className={'w-full flex flex-row gap-10 items-center justify-center'}
+                className={'w-full flex flex-row gap-8 items-center justify-center'}
             >
                 {isLoading && (
                     <>
@@ -30,19 +29,19 @@ export default function DashboardView() {
                             <DashboardCardItem
                                 title={'# de visitantes de hoy'}
                                 stats={data.totalVisitorsToday}
-                                subtitle={'+5.1 % que el mes pasado'}
+                                subtitle={''}
                                 Icon={<MdPeople size={16} className={'text-primaryColor'}/>}
                             />
                             <DashboardCardItem
                                 title={'Total de hogares registrados'}
                                 stats={data.totalHomes}
-                                subtitle={'+10.1 % que el mes pasado'}
+                                subtitle={''}
                                 Icon={<MdHome size={16} className={'text-primaryColor'}/>}
                             />
                             <DashboardCardItem
                                 title={'Total residentes registrados'}
                                 stats={data.totalResidents}
-                                subtitle={'+20.1 % que el mes pasado'}
+                                subtitle={''}
                                 Icon={<MdCardMembership size={16} className={'text-primaryColor'}/>}
                             />
                         </>
@@ -54,16 +53,18 @@ export default function DashboardView() {
                 (
                     <>
                         <div className={'w-full flex-col flex gap-6 px-8'}>
-                            <h1 className={'text-1xl font-medium self-start'}>
-                                {'Total de entradas por mes'}
-                            </h1>
-                            <LinearOverview data={data}/>
+                            {/*<h1 className={'text-1xl font-medium self-start'}>*/}
+                            {/*    {'Total de entradas por mes'}*/}
+                            {/*</h1>*/}
+                            {/*<LinearOverview data={data}/>*/}
+                            <DashboardLinearChart data={data}/>
                         </div>
-                        <div className={'w-full flex-col flex gap-6 px-8'}>
-                            <h1 className={'text-1xl font-medium'}>
-                                {'Total entradas por hora'}
-                            </h1>
-                            <Overview data={data}/>
+                        <div className={'w-full flex-col flex px-8'}>
+                            {/*<h1 className={'text-1xl font-medium'}>*/}
+                            {/*    {'Total entradas por hora'}*/}
+                            {/*</h1>*/}
+                            <DashboardBarChart data={data}/>
+                            {/*<Overview data={data}/>*/}
                         </div>
                     </>
                 )
