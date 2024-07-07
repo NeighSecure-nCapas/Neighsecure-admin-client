@@ -7,33 +7,13 @@ import { LiaIdCard } from 'react-icons/lia';
 import PopoverDemo from './HomesPopover.tsx';
 import HomesMemberInfo from './HomesMemberInfo.tsx';
 import { toast } from 'sonner';
-import { POST } from "@/hooks/Dashboard.tsx";
-import { redirect } from "react-router-dom";
-// import { useParams } from 'react-router-dom';
+import { POST } from '@/hooks/Dashboard.tsx';
+import { useNavigate } from 'react-router-dom';
 
 const HomesAddNew = () => {
-    // const {id} = useParams();
-    // const [home, setNewHome] = useState<Home | null>(null);
-    // const [isNewHome, setIsNewHome] = useState(false);
-    // useEffect(() => {
-    //     if (id) {
-    //         setIsNewHome(false);
-    //         const newHome = homes.find((home) => home.id === id) || null;
-    //         setHomeNumberState({
-    //             homeNumber: newHome!.homeNumber,
-    //             errorFieldHomeNumber: ''
-    //         });
-    //         setNewHome(newHome);
-    //     } else {
-    //         setIsNewHome(true);
-    //         setNewHome({
-    //             admin: null,
-    //             users: []
-    //         });
-    //     }
-    // }, []);
 
     const [membersNumber, setMembersNumber] = useState<number>(5);
+    const navigate = useNavigate();
 
     const [homeNumberState, setHomeNumberState] = useState<{
         homeNumber?: number;
@@ -59,17 +39,6 @@ const HomesAddNew = () => {
     );
 
     const onSaveHome = async () => {
-        // if (!isNewHome) {
-        //     // TODO: Save updatedHomes to the API
-        //     home!.homeNumber = homeNumberState.homeNumber;
-        //     home!.membersNumber = membersNumber;
-        //
-        //     toast.success('¡Hogar actualizado con éxito!', {
-        //         description: 'El hogar ha sido actualizado con éxito.'
-        //     });
-        //     window.history.back();
-        //     return;
-        // }
 
         if (!homeNumberState.homeNumber || homeNumberState.homeNumber < 0) {
             setHomeNumberState({
@@ -98,16 +67,6 @@ const HomesAddNew = () => {
         home!.membersNumber = membersNumber;
         home!.address = address.address;
 
-        // // TODO: Search if the house already exits
-        // const searchHome = homes.find((home) => home.homeNumber === home!.homeNumber) || null;
-        //
-        // if (searchHome) {
-        //     toast.warning("¡Ups! Esta casa ya existe.", {
-        //         description: "La casa ya se encuentra registrada.",
-        //     });
-        //     return;
-        // }
-
         // * Save home
         const newHomeRequest = {
             homeNumber: home!.homeNumber,
@@ -119,7 +78,10 @@ const HomesAddNew = () => {
         console.log(newHomeRequest);
         POST('/admin/homes/register', newHomeRequest).then(
             () => {
-                redirect('/admin/hogares');
+                navigate('/admin/hogares');
+                toast.success('Listo!.', {
+                    description: 'Hogar actualizado con exito.'
+                });
             }
         );
     };
@@ -127,7 +89,7 @@ const HomesAddNew = () => {
     const handleRemoveUser = async () => {
         setNewHome({...home, admin: null});
         toast.success('Listo!.', {
-            description: 'Residente eleminado con exito.'
+            description: 'Residente eliminado con exito.'
         });
     };
 
@@ -266,13 +228,13 @@ export const UserCard = (
   user: User,
   index?: number,
   home?: Home,
-  setHome?: (home: Home) => void
+  setHome?: (home: Home | HomeResponse) => void
 ): JSX.Element => {
     const handleRemoveUser = () => {
         const updatedUsers = home!.users?.filter((_u, i) => i !== index);
         setHome!({ ...home, users: updatedUsers });
         toast.success('Listo!.', {
-            description: 'Residente eleminado con exito.'
+            description: 'Residente eliminado con exito.'
         });
     };
 

@@ -45,32 +45,24 @@ export const AuthContextProvider = (props: any) => {
 
         try {
             const {data} = await axios.get('/auth/whoami');
-            if (!data.data.roles.some((role:{
-                rol: string;
-                rolId: string;
-            }) => role.rol.includes('Administrador'))) {
+            if (!data.data.roles.some((role: { rol: string; rolId: string; }) => role.rol.includes('Administrador'))) {
                 toast.error('Unauthorized access');
+                // Almacenar la ruta actual antes de redirigir
                 navigate('/');
                 logout();
+            } else {
+                // Verifica si hay una ruta almacenada y redirige allí, de lo contrario, redirige a /admin
+                const lastPath = localStorage.getItem('lastPath') || '/admin';
+                navigate(lastPath);
             }
-            navigate('/admin');
         } catch (error) {
             toast.error('Error fetching user info');
         }
     };
 
     useEffect(() => {
-        // toast.promise(
-        //     fetchUserInfo(),
-        //     {
-        //         loading: "Fetching user info...",
-        //         success: () => {
-        //             return "User info fetched successfully";
-        //         },
-        //         error: "Error fetching user info",
-        //     }
-        // )
       fetchUserInfo();
+      localStorage.setItem('lastPath', window.location.pathname);
     }, [token]);
 
     const login = useGoogleLogin({

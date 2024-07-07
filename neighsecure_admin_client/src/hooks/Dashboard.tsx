@@ -57,6 +57,35 @@ export const POST = async (url: string,
   }
 };
 
+export const PATCH = async (url: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any
+) => {
+  const token = localStorage.getItem('neigh_secure_token');
+  toast.promise(axios.patch(
+      url,
+      data,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    ),
+    {
+      loading: 'Updating ...',
+      success: (payload) => {
+        if (payload.status != 200) {
+          throw new Error('Error updating resource');
+        }
+        return 'Resource updated successfully';
+      },
+      error: (e) => {
+        return e.response.data.message;
+      }
+    }
+  );
+};
+
 export const deleteEntries = async (url: string) => {
   const token = localStorage.getItem('neigh_secure_token');
   try {
@@ -114,31 +143,31 @@ export const deleteUser = async (url: string, role: string) => {
   }
 };
 
-export const deleteHome = async (url: string ) => {
-    const token = localStorage.getItem('neigh_secure_token');
-    try {
-        toast.promise(axios.patch(
-            url,
-            {},
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }
-          ),
-          {
-              loading: 'Deleting home...',
-              success: (payload) => {
-                  if (payload.status != 200) {
-                      throw new Error('Error deleting home');
-                  }
-                  mutate('/admin/homes');
-                  return 'Home deleted successfully';
-              },
-              error: 'Error deleting home'
+export const deleteHome = async (url: string) => {
+  const token = localStorage.getItem('neigh_secure_token');
+  try {
+    toast.promise(axios.patch(
+        url,
+        {},
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
           }
-        );
-    } catch (e) {
-        toast.error('Error deleting user' + e);
-    }
+        }
+      ),
+      {
+        loading: 'Deleting home...',
+        success: (payload) => {
+          if (payload.status != 200) {
+            throw new Error('Error deleting home');
+          }
+          mutate('/admin/homes');
+          return 'Home deleted successfully';
+        },
+        error: 'Error deleting home'
+      }
+    );
+  } catch (e) {
+    toast.error('Error deleting user' + e);
+  }
 };

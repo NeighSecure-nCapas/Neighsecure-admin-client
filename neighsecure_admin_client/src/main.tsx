@@ -19,6 +19,7 @@ import EntriesDetail from '@/views/Entries/EntriesDetail.tsx';
 import SecurityView from '@/views/Security/SecurityView.tsx';
 import SecurityDetails from '@/views/Security/SecurityDetails.tsx';
 import LoginView from '@/views/LoginView.tsx';
+import HomesUpdateInfo from "@/views/Home/HomesUpdateInfo.tsx";
 
 axios.defaults.baseURL = import.meta.env.VITE_APIENDPOINT || 'http://localhost/';
 
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: 'hogares/:id',
-                        element: <HomesAddNew/>
+                        element: <HomesUpdateInfo/>
                     },
                     {
                         path: 'residentes',

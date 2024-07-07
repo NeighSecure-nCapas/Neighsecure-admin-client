@@ -24,6 +24,16 @@ type Home = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+type HomeResponse = {
+  id: string
+  homeNumber: number
+  address?: string
+  homeBoss: User | null
+  members: User[]
+  membersNumber: number
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type DashboardData = {
   totalResidents: number,
   totalVisitorsToday: number,
