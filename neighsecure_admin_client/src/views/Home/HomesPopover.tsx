@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { MdEdit } from "react-icons/md";
+  PopoverTrigger
+} from '@/components/ui/popover';
+import { MdEdit } from 'react-icons/md';
 
 type PopoverDemoProps = {
   membersNumber: number;
@@ -17,7 +17,7 @@ const PopoverDemo = ({ membersNumber, setMembersNumber }: PopoverDemoProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant={"ghost"} size={"icon"}>
+        <Button variant={'ghost'} size={'icon'}>
           <MdEdit />
         </Button>
       </PopoverTrigger>
@@ -25,11 +25,11 @@ const PopoverDemo = ({ membersNumber, setMembersNumber }: PopoverDemoProps) => {
         <div className="grid gap-4">
           <div className="space-y-2">
             <h4 className="font-medium leading-none">
-              {"Numero de miembros del hogar"}
+              {'Numero de miembros del hogar'}
             </h4>
             <p className="text-sm text-muted-foreground">
               {
-                "El número de miembros del hogar es la cantidad maxima de personas a registrar."
+                'El número de miembros del hogar es la cantidad maxima de personas a registrar.'
               }
             </p>
           </div>
@@ -40,7 +40,6 @@ const PopoverDemo = ({ membersNumber, setMembersNumber }: PopoverDemoProps) => {
             min={0}
             className="py-5"
             onChange={(e) => setMembersNumber(Number(e.target.value))}
-            defaultValue="0"
           />
         </div>
       </PopoverContent>

@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from "react";
-// import { useConfigContext } from "./ConfigContext";
-import axios from "axios";
-import {TokenResponse, useGoogleLogin} from "@react-oauth/google";
-import {useNavigate} from "react-router-dom";
-import {toast} from "sonner";
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
+import {TokenResponse, useGoogleLogin} from '@react-oauth/google';
+import {useNavigate} from 'react-router-dom';
+import {toast} from 'sonner';
 
-const TOKEN_KEY = "neigh_secure_token";
+const TOKEN_KEY = 'neigh_secure_token';
 const AuthContext = React.createContext({} as AuthContextProviderProps);
 
 export interface User {
@@ -22,6 +21,7 @@ export interface AuthContextProviderProps {
     logout: () => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const AuthContextProvider = (props: any) => {
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<User | TokenResponse | null>(null);
@@ -41,28 +41,28 @@ export const AuthContextProvider = (props: any) => {
             return;
         }
 
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
         try {
-            const {data} = await axios.get("/auth/whoami");
-            setUser(data.data);
+            const {data} = await axios.get('/auth/whoami');
+            if (!data.data.roles.some((role: { rol: string; rolId: string; }) => role.rol.includes('Administrador'))) {
+                toast.error('Unauthorized access');
+                // Almacenar la ruta actual antes de redirigir
+                navigate('/');
+                logout();
+            } else {
+                // Verifica si hay una ruta almacenada y redirige allí, de lo contrario, redirige a /admin
+                const lastPath = localStorage.getItem('lastPath') || '/admin';
+                navigate(lastPath);
+            }
         } catch (error) {
-            toast.error("Error fetching user info");
+            toast.error('Error fetching user info');
         }
     };
 
     useEffect(() => {
-        // toast.promise(
-        //     fetchUserInfo(),
-        //     {
-        //         loading: "Fetching user info...",
-        //         success: () => {
-        //             return "User info fetched successfully";
-        //         },
-        //         error: "Error fetching user info",
-        //     }
-        // )
       fetchUserInfo();
+      localStorage.setItem('lastPath', window.location.pathname);
     }, [token]);
 
     const login = useGoogleLogin({
@@ -95,47 +95,46 @@ export const AuthContextProvider = (props: any) => {
                     }
                 ),
                 {
-                    loading: "Logging in...",
+                    loading: 'Logging in...',
                     success: (payload ) => {
                         if (payload) {
                           const _token = payload.data.data.token;
                           setToken(_token.toString());
                           setTokenLS(_token);
-                          navigate("/admin");
                         }
-                        return "User logged in successfully";
+                        return 'User logged in successfully';
                     },
-                    error: "Error logging in",
+                    error: 'Error logging in'
                 }
-            )
+            );
         },
-        flow: "auth-code",
-        scope: "profile email",
+        flow: 'auth-code',
+        scope: 'profile email',
         onError: (
             errorResponse: Pick<
                 TokenResponse,
-                "error" | "error_description" | "error_uri"
+                'error' | 'error_description' | 'error_uri'
             >
         ) =>
             console.log(
-                "Login Failed:",
+                'Login Failed:',
                 errorResponse.error,
                 errorResponse.error_description
-            ),
+            )
     });
 
     const logout = () => {
         removeTokenLS();
         setToken(null);
         setUser(null);
-        window.location.assign("/")
+        window.location.assign('/');
     };
 
     const state: AuthContextProviderProps = {
         token,
         user,
         login,
-        logout,
+        logout
     };
 
     return <AuthContext.Provider value={state} {...props} />;
@@ -146,7 +145,7 @@ export const useAuthContext = () => {
 
     if (!context) {
         throw new Error(
-            "useUserContext must be call inside of a UserContextProvider component"
+            'useUserContext must be call inside of a UserContextProvider component'
         );
     }
 
