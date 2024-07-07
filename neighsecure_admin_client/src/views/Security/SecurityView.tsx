@@ -112,7 +112,7 @@ const SecurityView = () => {
 
     return (
         <AnimationWrap
-            className="container lg:w-[80%] min-h-dvh h-full py-12 flex flex-col justify-center items-center gap-12"
+            className="container lg:w-[80%] min-h-dvh py-12 flex flex-col justify-center items-center gap-12"
             position={-50}
         >
             <h1 className="self-start text-3xl ">

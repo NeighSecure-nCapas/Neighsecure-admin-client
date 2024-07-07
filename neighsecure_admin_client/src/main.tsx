@@ -20,7 +20,7 @@ import SecurityView from '@/views/Security/SecurityView.tsx';
 import SecurityDetails from '@/views/Security/SecurityDetails.tsx';
 import LoginView from '@/views/LoginView.tsx';
 
-axios.defaults.baseURL = import.meta.env.VITE_APIENDPOINT || 'http://localhost:8080/neighSecure';
+axios.defaults.baseURL = import.meta.env.VITE_APIENDPOINT || 'http://localhost/';
 
 const router = createBrowserRouter([
     {
@@ -93,7 +93,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <GoogleOAuthProvider clientId={'266523106449-pojfcjr5r4gtmlontuhfuc3ram9a54l7.apps.googleusercontent.com'}>
       <React.StrictMode>
           <RouterProvider router={router} />
-          <Toaster richColors closeButton />
+          <Toaster richColors closeButton position={'top-right'} />
       </React.StrictMode>
   </GoogleOAuthProvider>
 );

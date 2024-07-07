@@ -18,7 +18,6 @@ export const GET = async (url: string) => {
       throw new Error('Error fetching entry');
     }
 
-    // console.log(res.data)
     return res.data.data;
   } catch (e) {
     console.log(e);
@@ -48,7 +47,9 @@ export const POST = async (url: string,
           }
           return 'Resource created successfully';
         },
-        error: 'Error creating creating'
+        error: (e) => {
+          return e.response.data.message;
+        }
       }
     );
   } catch (e) {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,8 @@ import { LiaIdCard } from 'react-icons/lia';
 import PopoverDemo from './HomesPopover.tsx';
 import HomesMemberInfo from './HomesMemberInfo.tsx';
 import { toast } from 'sonner';
-import { homes } from '@/data/dummydata';
+import { POST } from "@/hooks/Dashboard.tsx";
+import { redirect } from "react-router-dom";
 // import { useParams } from 'react-router-dom';
 
 const HomesAddNew = () => {
@@ -33,6 +34,7 @@ const HomesAddNew = () => {
     // }, []);
 
     const [membersNumber, setMembersNumber] = useState<number>(5);
+
     const [homeNumberState, setHomeNumberState] = useState<{
         homeNumber?: number;
         errorFieldHomeNumber?: string;
@@ -41,7 +43,20 @@ const HomesAddNew = () => {
         errorFieldHomeNumber: ''
     });
 
-    const [home, setNewHome] = useState<Home | null>();
+    const [address, setAddress] = useState<{
+        address?: string;
+        errorFieldAddress?: string;
+    }>({
+        address: '',
+        errorFieldAddress: ''
+    });
+
+    const [home, setNewHome] = useState<Home>(
+        {
+            admin: null,
+            users: []
+        }
+    );
 
     const onSaveHome = async () => {
         // if (!isNewHome) {
@@ -56,9 +71,16 @@ const HomesAddNew = () => {
         //     return;
         // }
 
-        if (!homeNumberState.homeNumber && !home!.homeNumber) {
+        if (!homeNumberState.homeNumber || homeNumberState.homeNumber < 0) {
             setHomeNumberState({
                 errorFieldHomeNumber: 'Este es un campo requerido.'
+            });
+            return;
+        }
+
+        if (!address.address || address.address.length < 0) {
+            setAddress({
+                errorFieldAddress: 'Este es un campo requerido.'
             });
             return;
         }
@@ -74,6 +96,7 @@ const HomesAddNew = () => {
 
         home!.homeNumber = homeNumberState.homeNumber;
         home!.membersNumber = membersNumber;
+        home!.address = address.address;
 
         // // TODO: Search if the house already exits
         // const searchHome = homes.find((home) => home.homeNumber === home!.homeNumber) || null;
@@ -86,12 +109,25 @@ const HomesAddNew = () => {
         // }
 
         // * Save home
+        const newHomeRequest = {
+            homeNumber: home!.homeNumber,
+            address: home!.address,
+            membersNumber: home!.membersNumber,
+            userAdmin: home!.admin.id,
+            homeMembers: home!.users?.map((user) => user.id)
+        };
+        console.log(newHomeRequest);
+        POST('/admin/homes/register', newHomeRequest).then(
+            () => {
+                redirect('/admin/hogares');
+            }
+        );
     };
 
     const handleRemoveUser = async () => {
         setNewHome({...home, admin: null});
         toast.success('Listo!.', {
-            description: 'Haz eleminado con exito.'
+            description: 'Residente eleminado con exito.'
         });
     };
 
@@ -119,47 +155,69 @@ const HomesAddNew = () => {
                         <label className={'flex flex-col gap-6 text-[18px]'}>
                             <span className="font-medium">{'Informacion del hogar'}</span>
                             <Input
-                                id="homeNumber"
-                                type="number"
-                                min={0}
-                                value={homeNumberState.homeNumber || home?.homeNumber}
-                                onChange={(e) =>
-                                    setHomeNumberState({
-                                        homeNumber: parseInt(e.target.value)
-                                    })
-                                }
-                                className={'w-[375px]'}
-                                errorMessage={homeNumberState.errorFieldHomeNumber}
-                                placeholder={'Número de casa'}
-                                required
+                              id="homeNumber"
+                              type="number"
+                              min={0}
+                              value={homeNumberState.homeNumber}
+                              onChange={(e) =>
+                                  {
+                                      if (parseInt(e.target.value) && parseInt(e.target.value) > 0)
+                                          {setHomeNumberState({
+                                              homeNumber: parseInt(e.target.value)
+                                          });}
+                                  }
+                              }
+                              className={'w-[375px]'}
+                              errorMessage={homeNumberState.errorFieldHomeNumber}
+                              placeholder={'Número de casa'}
+                              required
                             />
                         </label>
+
+                        <label className={'flex flex-col gap-6 text-[18px]'}>
+                            <span className="font-medium">{'Direccion del hogar'}</span>
+                            <Input
+                              id="homeAddress"
+                              type="text"
+                              value={address.address}
+                              onChange={(e) =>
+                                setAddress({
+                                    address: e.target.value
+                                })
+                              }
+                              className={'w-[375px]'}
+                              errorMessage={address.errorFieldAddress}
+                              placeholder={'Dirección'}
+                              required
+                            />
+                        </label>
+
                         <h2 className="text-[18px] font-medium">{'Residente encargado'}</h2>
                         {home?.admin && (
-                            <div className="flex flex-row gap-6 justify-around items-center">
-                                <LiaIdCard className="h-10 w-10"/>
-                                <div className="flex flex-col gap-2 shrink-0 mr-auto">
-                                    <span className="text-lg">{home?.admin?.name}</span>
-                                    <span className="text-secondaryText text-sm font-light">
+                          <div className="flex flex-row gap-6 justify-around items-center">
+                              <LiaIdCard className="h-10 w-10" />
+                              <div className="flex flex-col gap-2 shrink-0 mr-auto">
+                                  <span className="text-lg">{home?.admin?.name}</span>
+                                  <span className="text-secondaryText text-sm font-light">
                     {'Residente encargado'}
                   </span>
-                                </div>
-                                <Button
-                                    onClick={handleRemoveUser}
-                                    variant={'ghost'}
-                                    size={'icon'}
-                                >
-                                    <MdClose className="h-6 w-6 cursor-pointer"/>
-                                </Button>
-                            </div>
+                              </div>
+                              <Button
+                                onClick={handleRemoveUser}
+                                variant={'ghost'}
+                                size={'icon'}
+                              >
+                                  <MdClose className="h-6 w-6 cursor-pointer" />
+                              </Button>
+                          </div>
                         )}
                         {!home?.admin && (
-                            <div className="flex flex-row items-center justify-center gap-4 text-secondaryText">
-                                <MdInfoOutline className="h-6 w-6"/>
-                                <span className="text-[14px]">
+                          <div className="flex flex-row items-center justify-center gap-4 text-secondaryText">
+                              <MdInfoOutline className="h-6 w-6" />
+                              <span className="text-[14px]">
                   {'No hay ningún residente encargado.'}
                 </span>
-                            </div>
+                          </div>
                         )}
                         <>
                             <h2 className="text-[18px] font-medium">
@@ -167,35 +225,35 @@ const HomesAddNew = () => {
                             </h2>
                             <div className="flex flex-col gap-6">
                                 {home?.users?.map((user, index) =>
-                                    UserCard(user, index, home, setNewHome)
+                                  UserCard(user, index, home, setNewHome)
                                 )}
                                 {!home?.users?.length && (
-                                    <InfoMessage message="No hay ningún miembro en el hogar."/>
+                                  <InfoMessage message="No hay ningún miembro en el hogar." />
                                 )}
                             </div>
                             <div className="flex flex-row gap-6 items-center shrink-0">
-                <span className="text-secondaryText text-sm">
-                  {`${home?.users?.length || 0} / ${membersNumber} Restantes`}
-                </span>
+                            <span className="text-secondaryText text-sm">
+                              {`${home?.users?.length || 0} / ${membersNumber} Restantes`}
+                            </span>
                                 <PopoverDemo
-                                    membersNumber={membersNumber}
-                                    setMembersNumber={setMembersNumber}
+                                  membersNumber={membersNumber}
+                                  setMembersNumber={setMembersNumber}
                                 />
                             </div>
                         </>
                     </div>
 
                     <HomesMemberInfo
-                        home={home}
-                        setNewHome={setNewHome}
-                        membersNumber={membersNumber}
+                      home={home}
+                      setNewHome={setNewHome}
+                      membersNumber={membersNumber}
                     />
                 </div>
                 <Button
-                    onClick={onSaveHome}
-                    variant={'default'}
-                    size={'lg'}
-                    className="mt-20"
+                  onClick={onSaveHome}
+                  variant={'default'}
+                  size={'lg'}
+                  className='mt-8'
                 >
                     Guardar Hogar
                 </Button>
@@ -205,27 +263,28 @@ const HomesAddNew = () => {
 };
 
 export const UserCard = (
-    user: User,
-    index?: number,
-    home?: Home,
-    setHome?: (home: Home) => void
+  user: User,
+  index?: number,
+  home?: Home,
+  setHome?: (home: Home) => void
 ): JSX.Element => {
     const handleRemoveUser = () => {
-        const updatedUsers = home!.users?.filter((u, i) => i !== index);
-        setHome!({...home, users: updatedUsers});
+        const updatedUsers = home!.users?.filter((_u, i) => i !== index);
+        setHome!({ ...home, users: updatedUsers });
+        toast.success('Listo!.', {
+            description: 'Residente eleminado con exito.'
+        });
     };
 
     return (
-        <div
-            key={index}
-            className="flex flex-row gap-6 items-center justify-between p-5 border border-primary rounded-xl"
+      <div
+        key={index}
+        className="flex flex-row gap-6 items-center justify-between p-5 border border-primary rounded-xl"
         >
             <LiaIdCard className="h-10 w-10"/>
             <div className="flex flex-col mr-auto gap-2 shrink-0">
-                <span className="text-sm">{user?.fullName || 'Fernando Figueroa'}</span>
-                <span className="text-secondaryText text-sm font-light">
-          {user?.roles[0] || 'Residente encargado'}
-        </span>
+                <span className="text-sm">{user?.name || 'Fernando Figueroa'}</span>
+                <span className="text-secondaryText text-sm font-light">{'Residente'}</span>
             </div>
             <Button onClick={handleRemoveUser} variant={'ghost'} size={'icon'}>
                 <MdClose className="h-6 w-6 cursor-pointer"/>
