@@ -76,14 +76,23 @@ const HomesAddNew = () => {
             userAdmin: home!.admin.id,
             homeMembers: home!.users?.map((user) => user.id)
         };
-        POST('/admin/homes/register', newHomeRequest).then(
-            () => {
-                mutate('/admin/homes?page=0&size=10');
-                navigate('/admin/hogares');
-                toast.success('Listo!.', {
-                    description: 'Hogar actualizado con exito.'
-                });
-            }
+        // POST('/admin/homes/register', newHomeRequest)
+        // mutate('/admin/homes?page=0&size=10');
+        // navigate('/admin/hogares');
+        // toast.success('Listo!.', {
+        //             description: 'Hogar actualizado con exito.'
+        // });
+        toast.promise(
+          POST('/admin/homes/register', newHomeRequest),
+          {
+              loading: 'Guardando hogar...',
+              success: () => {
+                  mutate('/admin/homes?page=0&size=10');
+                  navigate('/admin/hogares');
+                  return 'Hogar guardado exitosamente';
+              },
+              error: 'Error al guardar el hogar'
+          }
         );
     };
 

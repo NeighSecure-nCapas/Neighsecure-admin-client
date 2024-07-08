@@ -49,7 +49,7 @@ export const AuthContextProvider = (props: any) => {
 
         try {
             const {data} = await axios.get('/auth/whoami');
-            if (!data.data.roles.some((role: { rol: string; rolId: string; }) => role.rol.includes('Administrador'))) {
+            if ( data && !data.data.roles.some((role: { rol: string; rolId: string; }) => role.rol.includes('Administrador'))) {
                 toast.error('Unauthorized access');
                 // Almacenar la ruta actual antes de redirigir
                 navigate('/');
