@@ -43,7 +43,7 @@ export const POST = async (url: string,
       {
         loading: 'Creating ...',
         success: (payload) => {
-          if (payload.status != 200) {
+          if (payload.status == 400 || payload.status == 401 || payload.status == 403 || payload.status == 404 || payload.status == 500) {
             throw new Error('Error creating resource');
           }
           return 'Resource created successfully';
@@ -76,10 +76,11 @@ export const AddNewHome = async (url: string,
       {
         loading: 'Creating ...',
         success: (payload) => {
-          if (payload.status != 200) {
+          if (payload.status == 400 || payload.status == 401 || payload.status == 403 || payload.status == 404 || payload.status == 500) {
             throw new Error('Error creating resource');
           }
-          //redirect('/admin/hogares'); // Redirect to homes page
+          mutate('/admin/homes?page=0&size=10');
+          redirect('/admin/hogares');
           return 'Resource created successfully';
         },
         error: (e) => {
