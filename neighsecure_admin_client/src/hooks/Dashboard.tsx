@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { toast } from 'sonner';
 import { mutate } from 'swr';
-import { redirect } from 'react-router-dom';
+import { redirect, useNavigate } from "react-router-dom";
 
 export const GET = async (url: string) => {
   const token = localStorage.getItem('neigh_secure_token');
@@ -49,7 +49,7 @@ export const POST = async (url: string,
           return 'Resource created successfully';
         },
         error: (e) => {
-          throw new Error(e.response.data.message);
+          return e.response.data.message;
         }
       }
     );
@@ -57,6 +57,42 @@ export const POST = async (url: string,
     console.log(e);
   }
 };
+
+export const AddNewHome = async (url: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any
+) => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem('neigh_secure_token');
+  try {
+    toast.promise(axios.post(
+        url,
+        data,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      ),
+      {
+        loading: 'Creating ...',
+        success: (payload) => {
+          if (payload.status != 200) {
+            throw new Error('Error creating resource');
+          }
+          navigate('/admin/hogares');
+          return 'Resource created successfully';
+        },
+        error: (e) => {
+          return e.response.data.message;
+        }
+      }
+    );
+  } catch (e) {
+    toast.error('Error adding home' + e);
+  }
+};
+
 
 export const PATCH = async (url: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

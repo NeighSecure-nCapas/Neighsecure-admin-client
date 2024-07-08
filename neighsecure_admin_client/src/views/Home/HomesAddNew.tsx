@@ -7,15 +7,11 @@ import { LiaIdCard } from 'react-icons/lia';
 import PopoverDemo from './HomesPopover.tsx';
 import HomesMemberInfo from './HomesMemberInfo.tsx';
 import { toast } from 'sonner';
-import { POST } from '@/hooks/Dashboard.tsx';
-import { useNavigate } from 'react-router-dom';
-import { mutate } from 'swr';
+import { AddNewHome } from '@/hooks/Dashboard.tsx';
 
 const HomesAddNew = () => {
 
     const [membersNumber, setMembersNumber] = useState<number>(5);
-    const navigate = useNavigate();
-
     const [homeNumberState, setHomeNumberState] = useState<{
         homeNumber?: number;
         errorFieldHomeNumber?: string;
@@ -82,18 +78,7 @@ const HomesAddNew = () => {
         // toast.success('Listo!.', {
         //             description: 'Hogar actualizado con exito.'
         // });
-        toast.promise(
-          POST('/admin/homes/register', newHomeRequest),
-          {
-              loading: 'Guardando hogar...',
-              success: () => {
-                  mutate('/admin/homes?page=0&size=10');
-                  navigate('/admin/hogares');
-                  return 'Hogar guardado exitosamente';
-              },
-              error: 'Error al guardar el hogar'
-          }
-        );
+        await AddNewHome('/admin/homes/register', newHomeRequest);
     };
 
     const handleRemoveUser = async () => {
