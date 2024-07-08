@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {TokenResponse, useGoogleLogin} from '@react-oauth/google';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {
+    //useLocation,
+    useNavigate
+} from 'react-router-dom';
 import {toast} from 'sonner';
 
 const TOKEN_KEY = 'neigh_secure_token';
@@ -27,7 +30,7 @@ export const AuthContextProvider = (props: any) => {
     const [user, setUser] = useState<User | TokenResponse | null>(null);
 
     const navigate = useNavigate();
-    const location = useLocation();
+    // const location = useLocation();
 
     useEffect(() => {
         const _token = getTokenLS();
@@ -52,13 +55,13 @@ export const AuthContextProvider = (props: any) => {
                 navigate('/');
                 logout();
             } else {
-                // Verifica si hay una ruta almacenada y redirige allí, de lo contrario, redirige a /admin
-                const lastPath = localStorage.getItem('lastPath');
-                if ( lastPath && lastPath === '/') {
-                    navigate('/admin');
-                } else {
-                    navigate(lastPath || '/admin');
-                }
+                // // Verifica si hay una ruta almacenada y redirige allí, de lo contrario, redirige a /admin
+                // const lastPath = localStorage.getItem('lastPath');
+                // if ( lastPath && lastPath === '/') {
+                //     navigate('/admin');
+                // } else {
+                //     navigate(lastPath || '/admin');
+                // }
             }
         } catch (error) {
             toast.error('Error fetching user info');
@@ -67,7 +70,7 @@ export const AuthContextProvider = (props: any) => {
 
     useEffect(() => {
       fetchUserInfo();
-      localStorage.setItem('lastPath', location.pathname);
+      //localStorage.setItem('lastPath', location.pathname);
     }, [token]);
 
     const login = useGoogleLogin({
@@ -106,6 +109,12 @@ export const AuthContextProvider = (props: any) => {
                           const _token = payload.data.data.token;
                           setToken(_token.toString());
                           setTokenLS(_token);
+
+                          fetchUserInfo().then(
+                            () => {
+                              navigate('/admin');
+                            }
+                          );
                         }
                         return 'User logged in successfully';
                     },

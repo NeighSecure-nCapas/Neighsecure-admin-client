@@ -9,6 +9,7 @@ import HomesMemberInfo from './HomesMemberInfo.tsx';
 import { toast } from 'sonner';
 import { POST } from '@/hooks/Dashboard.tsx';
 import { useNavigate } from 'react-router-dom';
+import { mutate } from 'swr';
 
 const HomesAddNew = () => {
 
@@ -75,9 +76,9 @@ const HomesAddNew = () => {
             userAdmin: home!.admin.id,
             homeMembers: home!.users?.map((user) => user.id)
         };
-        console.log(newHomeRequest);
         POST('/admin/homes/register', newHomeRequest).then(
             () => {
+                mutate('/admin/homes?page=0&size=10');
                 navigate('/admin/hogares');
                 toast.success('Listo!.', {
                     description: 'Hogar actualizado con exito.'

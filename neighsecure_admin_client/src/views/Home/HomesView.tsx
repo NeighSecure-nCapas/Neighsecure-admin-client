@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import AnimationWrap from '@/components/ui/AnimationWraper.tsx';
-import useSWR from 'swr';
+import useSWR, { mutate } from "swr";
 import { deleteHome, GET } from '@/hooks/Dashboard.tsx';
 import LoadingSpinner from '@/components/LoadingSpinner.tsx';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card.tsx';
@@ -91,7 +91,11 @@ export default function HomesView() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                   onClick={async () => {
-                    await deleteHome(`/admin/homes/delete/${cell.row.original.id}`);
+                    await deleteHome(`/admin/homes/delete/${cell.row.original.id}`).then(
+                      () => {
+                        mutate(`/admin/homes?page=${page}&size=10`);
+                      }
+                    );
                   }
                 }
                 className="bg-red-500 cursor-pointer text-white">
