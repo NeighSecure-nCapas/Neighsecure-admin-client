@@ -12,7 +12,7 @@ import {ColumnDef} from '@tanstack/react-table';
 import {MdDeleteSweep, MdKeyboardArrowDown, MdMoreHoriz} from 'react-icons/md';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import AnimationWrap from '@/components/ui/AnimationWraper.tsx';
-import useSWR from 'swr';
+import useSWR, { mutate } from "swr";
 import {deleteEntries, GET} from '@/hooks/Dashboard.tsx';
 import { format} from 'date-fns';
 import {es} from 'date-fns/locale';
@@ -123,7 +123,11 @@ const VisitorViews = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                     onClick={ async () => {
-                      await deleteEntries(`/admin/entries/delete/${cell.row.original.id}`);
+                      await deleteEntries(`/admin/entries/delete/${cell.row.original.id}`).then(
+                        () => {
+                          mutate(`/admin/entries?page=${page}&size=10`);
+                        }
+                      );
                     }
                 }
                     className="bg-red-500 cursor-pointer text-white">
