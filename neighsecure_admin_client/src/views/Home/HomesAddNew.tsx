@@ -7,7 +7,7 @@ import { LiaIdCard } from 'react-icons/lia';
 import PopoverDemo from './HomesPopover.tsx';
 import HomesMemberInfo from './HomesMemberInfo.tsx';
 import { toast } from 'sonner';
-import { AddNewHome } from '@/hooks/Dashboard.tsx';
+import { POST } from '@/hooks/Dashboard.tsx';
 
 const HomesAddNew = () => {
 
@@ -78,7 +78,7 @@ const HomesAddNew = () => {
         // toast.success('Listo!.', {
         //             description: 'Hogar actualizado con exito.'
         // });
-        await AddNewHome('/admin/homes/register', newHomeRequest);
+        await POST('/admin/homes/register', newHomeRequest);
     };
 
     const handleRemoveUser = async () => {
