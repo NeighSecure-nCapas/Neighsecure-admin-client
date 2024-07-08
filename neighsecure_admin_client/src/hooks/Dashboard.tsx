@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { toast } from 'sonner';
 import { mutate } from 'swr';
+import { redirect } from "react-router-dom";
 
 export const GET = async (url: string) => {
   const token = localStorage.getItem('neigh_secure_token');
@@ -162,6 +163,7 @@ export const deleteHome = async (url: string) => {
             throw new Error('Error deleting home');
           }
           mutate('/admin/homes');
+          redirect('/admin/hogares');
           return 'Home deleted successfully';
         },
         error: 'Error deleting home'

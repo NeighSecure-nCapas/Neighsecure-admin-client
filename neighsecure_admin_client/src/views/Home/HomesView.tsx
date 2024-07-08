@@ -23,6 +23,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.tsx';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card.tsx';
 
 export default function HomesView() {
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') || 0;
