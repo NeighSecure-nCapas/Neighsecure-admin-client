@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { toast } from 'sonner';
 import { mutate } from 'swr';
-import { redirect, useNavigate } from "react-router-dom";
+import { redirect } from 'react-router-dom';
 
 export const GET = async (url: string) => {
   const token = localStorage.getItem('neigh_secure_token');
@@ -62,7 +62,6 @@ export const AddNewHome = async (url: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any
 ) => {
-  const navigate = useNavigate();
   const token = localStorage.getItem('neigh_secure_token');
   try {
     toast.promise(axios.post(
@@ -80,7 +79,7 @@ export const AddNewHome = async (url: string,
           if (payload.status != 200) {
             throw new Error('Error creating resource');
           }
-          navigate('/admin/hogares');
+          redirect('/admin/hogares'); // Redirect to homes page
           return 'Resource created successfully';
         },
         error: (e) => {
