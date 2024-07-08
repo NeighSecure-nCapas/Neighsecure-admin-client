@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {TokenResponse, useGoogleLogin} from '@react-oauth/google';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from 'react-router-dom';
 import {toast} from 'sonner';
 
 const TOKEN_KEY = 'neigh_secure_token';
@@ -68,7 +68,6 @@ export const AuthContextProvider = (props: any) => {
     useEffect(() => {
       fetchUserInfo();
       localStorage.setItem('lastPath', location.pathname);
-      console.log('Last path:', location.pathname);
     }, [token]);
 
     const login = useGoogleLogin({
@@ -114,6 +113,7 @@ export const AuthContextProvider = (props: any) => {
                 }
             );
         },
+        redirect_uri: 'https://neighsecure-admin-client.vercel.app',
         flow: 'auth-code',
         scope: 'profile email',
         onError: (
