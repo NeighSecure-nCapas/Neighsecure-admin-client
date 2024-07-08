@@ -62,7 +62,6 @@ export const AddNewHome = async (url: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any
 ) => {
-  const navigate = useNavigate();
   const token = localStorage.getItem('neigh_secure_token');
   try {
     toast.promise(axios.post(
@@ -81,7 +80,7 @@ export const AddNewHome = async (url: string,
             throw new Error('Error creating resource');
           }
           mutate('/admin/homes?page=0&size=10');
-          navigate('/admin/hogares');
+          redirect('/admin/hogares');
           return 'Resource created successfully';
         },
         error: (e) => {
