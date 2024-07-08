@@ -79,7 +79,7 @@ export const AddNewHome = async (url: string,
           if (payload.status != 200) {
             throw new Error('Error creating resource');
           }
-          redirect('/admin/hogares'); // Redirect to homes page
+          //redirect('/admin/hogares'); // Redirect to homes page
           return 'Resource created successfully';
         },
         error: (e) => {
