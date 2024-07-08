@@ -7,7 +7,7 @@ import { LiaIdCard } from 'react-icons/lia';
 import PopoverDemo from './HomesPopover.tsx';
 import HomesMemberInfo from './HomesMemberInfo.tsx';
 import { toast } from 'sonner';
-import { AddNewHome, POST } from "@/hooks/Dashboard.tsx";
+import { AddNewHome } from '@/hooks/Dashboard.tsx';
 
 const HomesAddNew = () => {
 
