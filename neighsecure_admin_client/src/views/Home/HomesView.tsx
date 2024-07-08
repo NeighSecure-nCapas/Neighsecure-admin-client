@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import AnimationWrap from '@/components/ui/AnimationWraper.tsx';
-import useSWR, { mutate } from "swr";
+import useSWR, { mutate } from 'swr';
 import { deleteHome, GET } from '@/hooks/Dashboard.tsx';
 import LoadingSpinner from '@/components/LoadingSpinner.tsx';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card.tsx';
