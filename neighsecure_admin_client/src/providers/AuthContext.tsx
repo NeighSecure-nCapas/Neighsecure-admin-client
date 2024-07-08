@@ -89,7 +89,7 @@ export const AuthContextProvider = (props: any) => {
         //   console.log(paylaod);
         // },
         onSuccess: async (codeResponse) => {
-            //console.log('Getting access authorization code..', codeResponse);
+            console.log('Getting access authorization code..', codeResponse);
             toast.promise(
                 axios.get(
                     '/auth/google/redirect',

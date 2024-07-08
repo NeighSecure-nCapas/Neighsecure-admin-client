@@ -60,7 +60,8 @@ export const POST = async (url: string,
 
 export const PATCH = async (url: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data?: any
+  data?: any,
+  mutateURL?: string
 ) => {
   const token = localStorage.getItem('neigh_secure_token');
   toast.promise(axios.patch(
@@ -78,6 +79,7 @@ export const PATCH = async (url: string,
         if (payload.status != 200) {
           throw new Error('Error updating resource');
         }
+        mutate(mutateURL || url);
         return 'Resource updated successfully';
       },
       error: (e) => {

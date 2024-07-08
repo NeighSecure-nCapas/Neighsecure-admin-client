@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import AnimationWrap from '@/components/ui/AnimationWraper.tsx';
-import useSWR from 'swr';
-import {deleteUser, GET} from '@/hooks/Dashboard.tsx';
+import useSWR, { mutate } from 'swr';
+import { GET, PATCH } from '@/hooks/Dashboard.tsx';
 import LoadingSpinner from '@/components/LoadingSpinner.tsx';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card.tsx';
 
@@ -97,7 +97,15 @@ const SecurityView = () => {
                             <DropdownMenuSeparator/>
                             <DropdownMenuItem
                                 onClick={ async () => {
-                                    await deleteUser(`/admin/users/delete/${cell.row.original.id}`, 'Vigilante');
+                                    await PATCH('/admin/deleteRole', {
+                                        userId: cell.row.original.id,
+                                        role: 'Vigilante'
+                                    }).then(
+                                        () => {
+                                            mutate(`/admin/users/role/vigilante?page=${page}&size=10`);
+                                        }
+                                    );
+                                    //await deleteUser(`/admin/users/delete/${cell.row.original.id}`, 'Vigilante');
                                 }
                             }
                                 className="bg-red-500 cursor-pointer text-white">
