@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { toast } from 'sonner';
 import { mutate } from 'swr';
-import { redirect } from "react-router-dom";
+import { redirect } from 'react-router-dom';
 
 export const GET = async (url: string) => {
   const token = localStorage.getItem('neigh_secure_token');

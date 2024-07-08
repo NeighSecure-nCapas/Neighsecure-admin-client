@@ -54,15 +54,16 @@ export const AuthContextProvider = (props: any) => {
                 // Almacenar la ruta actual antes de redirigir
                 navigate('/');
                 logout();
-            } else {
-                // // Verifica si hay una ruta almacenada y redirige allí, de lo contrario, redirige a /admin
-                // const lastPath = localStorage.getItem('lastPath');
-                // if ( lastPath && lastPath === '/') {
-                //     navigate('/admin');
-                // } else {
-                //     navigate(lastPath || '/admin');
-                // }
             }
+            // else {
+            //     // Verifica si hay una ruta almacenada y redirige allí, de lo contrario, redirige a /admin
+            //     const lastPath = localStorage.getItem('lastPath');
+            //     if ( lastPath && lastPath === '/') {
+            //         navigate('/admin');
+            //     } else {
+            //         navigate(lastPath || '/admin');
+            //     }
+            // }
         } catch (error) {
             toast.error('Error fetching user info');
         }
@@ -71,7 +72,7 @@ export const AuthContextProvider = (props: any) => {
     useEffect(() => {
       fetchUserInfo();
       //localStorage.setItem('lastPath', location.pathname);
-    }, [token]);
+    }, []);
 
     const login = useGoogleLogin({
         // onSuccess: async (response: TokenResponse) => {
@@ -109,7 +110,6 @@ export const AuthContextProvider = (props: any) => {
                           const _token = payload.data.data.token;
                           setToken(_token.toString());
                           setTokenLS(_token);
-
                           fetchUserInfo().then(
                             () => {
                               navigate('/admin');
