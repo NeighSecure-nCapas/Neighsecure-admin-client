@@ -49,7 +49,7 @@ export const POST = async (url: string,
           return 'Resource created successfully';
         },
         error: (e) => {
-          return e.response.data.message;
+          throw new Error(e.response.data.message);
         }
       }
     );
