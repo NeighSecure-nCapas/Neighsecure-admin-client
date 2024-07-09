@@ -80,7 +80,8 @@ export const AddNewHome = async (url: string,
             throw new Error('Error creating resource');
           }
           mutate('/admin/homes?page=0&size=10');
-          redirect('/admin/hogares');
+          // go back to homes page
+          window.history.back();
           return 'Resource created successfully';
         },
         error: (e) => {
